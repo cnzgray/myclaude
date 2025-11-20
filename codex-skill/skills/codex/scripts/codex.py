@@ -67,29 +67,8 @@ def parse_args():
         log_error('Task required')
         sys.exit(1)
 
-    # 解析可选标志（-c/--model_reasoning_effort），支持 -c=val 或 -c val
-    reasoning = None
-    i = 1
-    cleaned_argv = [sys.argv[0]]
-    while i < len(sys.argv):
-        a = sys.argv[i]
-        if a.startswith('-c=') or a.startswith('--model_reasoning_effort='):
-            reasoning = a.split('=', 1)[1]
-            i += 1
-            continue
-        if a in ('-c', '--model_reasoning_effort'):
-            if i + 1 < len(sys.argv):
-                reasoning = sys.argv[i + 1]
-                i += 2
-                continue
-            else:
-                log_error('-c/--model_reasoning_effort requires a value')
-                sys.exit(1)
-        cleaned_argv.append(a)
-        i += 1
-
     # 检测是否为 resume 模式
-    if cleaned_argv[1] == 'resume':
+    if sys.argv[1] == 'resume':
         if len(sys.argv) < 4:
             log_error('Resume mode requires: resume <session_id> <task>')
             sys.exit(1)
@@ -98,86 +77,42 @@ def parse_args():
             'session_id': sys.argv[2],
             'task': sys.argv[3],
             'model': sys.argv[4] if len(sys.argv) > 4 else DEFAULT_MODEL,
-            'workdir': sys.argv[5] if len(sys.argv) > 5 else DEFAULT_WORKDIR,
-            'reasoning': reasoning
+            'workdir': sys.argv[5] if len(sys.argv) > 5 else DEFAULT_WORKDIR
         }
     else:
         return {
             'mode': 'new',
             'task': sys.argv[1],
             'model': sys.argv[2] if len(sys.argv) > 2 else DEFAULT_MODEL,
-            'workdir': sys.argv[3] if len(sys.argv) > 3 else DEFAULT_WORKDIR,
-            'reasoning': reasoning
+            'workdir': sys.argv[3] if len(sys.argv) > 3 else DEFAULT_WORKDIR
         }
 
 
 def build_codex_args(params: dict) -> list:
     """构建 codex CLI 参数"""
     if params['mode'] == 'resume':
-        args = [
+        return [
             'codex', 'e',
             '--skip-git-repo-check',
-        ]
-
-        reasoning = params.get('reasoning')
-        if reasoning:
-            args += ['-c', reasoning]
-
-        args += [
             '--json',
             'resume',
             params['session_id'],
             params['task']
         ]
-
-        return args
     else:
-        args = [
+        return [
             'codex', 'e',
             '-m', params['model'],
             '--dangerously-bypass-approvals-and-sandbox',
             '--skip-git-repo-check',
             '-C', params['workdir'],
-        ]
-
-        # 传递模型推理强度（如果指定）
-        reasoning = params.get('reasoning')
-        if reasoning:
-            args += ['-c', reasoning]
-
-        args += [
             '--json',
             params['task']
         ]
-        return args
 
 
 def main():
     params = parse_args()
-    # 根据模型选择默认推理等级（若未指定）并校验
-    def resolve_reasoning_choice(model: str, choice: Optional[str]) -> Optional[str]:
-        model_lower = model.lower() if model else ''
-        if 'gpt-5.1-codex-max' in model_lower:
-            allowed = ('low', 'medium', 'high', 'xhigh')
-            default = 'xhigh'
-        elif 'gpt-5.1' in model_lower:
-            allowed = ('low', 'medium', 'high')
-            default = 'high'
-        else:
-            # 对未知模型使用 medium 作为安全默认
-            allowed = ('low', 'medium', 'high')
-            default = 'medium'
-
-        if choice is None:
-            return default
-        normalized = choice.lower()
-        if normalized not in allowed:
-            log_warn(f"Unsupported reasoning '{choice}' for model {model}. Falling back to {default}")
-            return default
-        return normalized
-
-    # resolve reasoning and inject into params
-    params['reasoning'] = resolve_reasoning_choice(params.get('model', DEFAULT_MODEL), params.get('reasoning'))
     codex_args = build_codex_args(params)
     timeout_sec = resolve_timeout()
 
