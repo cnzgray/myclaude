@@ -1,0 +1,9 @@
+{
+  "name": "output-styles",
+  "version": "1.0.0",
+  "description": "定义Claude Output Styles的插件",
+  "author": {
+    "name": "cnzgray",
+    "email": "cnzgray@gmail.com"
+  }
+}
