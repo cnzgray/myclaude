@@ -1,0 +1,23 @@
+{
+    "name": "my-marketplace",
+    "owner": {
+        "name": "cnzgray"
+    },
+    "plugins": [
+        {
+            "name": "output-styles",
+            "source": "./output-styles",
+            "description": "定义Claude Output Styles的插件"
+        },
+        {
+            "name": "codex-skill",
+            "source": "./codex-skill",
+            "description": "实现Claude Code与Codex之间的协作开发的插件，注意这个插件与gemini-skill插件不能同时启用"
+        },
+        {
+            "name": "gemini-skill",
+            "source": "./gemini-skill",
+            "description": "实现Claude Code与Gemini之间的协作开发的插件，注意这个插件与codex-skill插件不能同时启用"
+        }
+    ]
+}
