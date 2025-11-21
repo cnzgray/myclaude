@@ -7,16 +7,16 @@
 Gemini CLI wrapper with cross-platform support.
 
 Usage:
-    uv run gemini.py -m <model> -p "<prompt>" [workdir]
-    python3 gemini.py -m <model> -p "<prompt>"
-    ./gemini.py -m gemini-2.5-pro -p "your prompt"
+    uv run gemini.py -p "<prompt>" [workdir]
+    python3 gemini.py -p "<prompt>"
+    ./gemini.py -p "your prompt"
 """
 import subprocess
 import sys
 import os
 import argparse
 
-DEFAULT_MODEL = 'gemini-2.5-pro'
+DEFAULT_MODEL = os.environ.get('GEMINI_MODEL')
 DEFAULT_WORKDIR = '.'
 DEFAULT_TIMEOUT = 7200  # 2 hours in seconds
 FORCE_KILL_DELAY = 5
@@ -57,11 +57,6 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '-m', '--model',
-        default=DEFAULT_MODEL,
-        help=f'Gemini model to use (default: {DEFAULT_MODEL})'
-    )
-    parser.add_argument(
         '-p', '--prompt',
         required=True,
         help='Prompt to send to Gemini'
@@ -78,12 +73,13 @@ def parse_args():
 
 def build_gemini_args(args) -> list:
     """构建 gemini CLI 参数"""
-    return [
+    base_args = [
         'gemini',
-        '-m', args.model,
         '-p', args.prompt
     ]
-
+    if DEFAULT_MODEL:
+        base_args[1:1] = ['-m', DEFAULT_MODEL]
+    return base_args
 
 def main():
     args = parse_args()

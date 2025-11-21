@@ -5,12 +5,15 @@
 # ///
 """
 Codex CLI wrapper with cross-platform support and session management.
+**FIXED**: Auto-detect long inputs and use stdin mode to avoid shell argument issues.
 
 Usage:
-    New session:  uv run codex.py "task" [model] [workdir]
-    Resume:       uv run codex.py resume <session_id> "task" [model] [workdir]
+    New session:  uv run codex.py "task" [workdir]
+    Resume:       uv run codex.py resume <session_id> "task" [workdir]
     Alternative:  python3 codex.py "task"
     Direct exec:  ./codex.py "task"
+
+    Model configuration: Set CODEX_MODEL environment variable (default: gpt-5.1-codex)
 """
 import subprocess
 import json
@@ -18,7 +21,7 @@ import sys
 import os
 from typing import Optional
 
-DEFAULT_MODEL = 'gpt-5-codex'
+DEFAULT_MODEL = os.environ.get('CODEX_MODEL')
 DEFAULT_WORKDIR = '.'
 DEFAULT_TIMEOUT = 7200  # 2 hours in seconds
 FORCE_KILL_DELAY = 5
@@ -32,6 +35,11 @@ def log_error(message: str):
 def log_warn(message: str):
     """输出警告信息到 stderr"""
     sys.stderr.write(f"WARN: {message}\n")
+
+
+def log_info(message: str):
+    """输出信息到 stderr"""
+    sys.stderr.write(f"INFO: {message}\n")
 
 
 def resolve_timeout() -> int:
@@ -76,20 +84,72 @@ def parse_args():
             'mode': 'resume',
             'session_id': sys.argv[2],
             'task': sys.argv[3],
-            'model': sys.argv[4] if len(sys.argv) > 4 else DEFAULT_MODEL,
-            'workdir': sys.argv[5] if len(sys.argv) > 5 else DEFAULT_WORKDIR
+            'workdir': sys.argv[4] if len(sys.argv) > 4 else DEFAULT_WORKDIR
         }
     else:
         return {
             'mode': 'new',
             'task': sys.argv[1],
-            'model': sys.argv[2] if len(sys.argv) > 2 else DEFAULT_MODEL,
-            'workdir': sys.argv[3] if len(sys.argv) > 3 else DEFAULT_WORKDIR
+            'workdir': sys.argv[2] if len(sys.argv) > 2 else DEFAULT_WORKDIR
         }
 
 
-def build_codex_args(params: dict) -> list:
-    """构建 codex CLI 参数"""
+def read_piped_task() -> Optional[str]:
+    """
+    从 stdin 读取任务文本：
+    - 如果 stdin 是管道（非 tty）且存在内容，返回读取到的字符串
+    - 否则返回 None
+    """
+    import select
+
+    stdin = sys.stdin
+    if stdin is None or stdin.isatty():
+        log_info("Stdin is tty or None, skipping pipe read")
+        return None
+
+    # 使用 select 检查是否有数据可读（0 秒超时，非阻塞）
+    readable, _, _ = select.select([stdin], [], [], 0)
+    if not readable:
+        log_info("No data available on stdin")
+        return None
+
+    log_info("Reading from stdin pipe...")
+    data = stdin.read()
+    if not data:
+        log_info("Stdin pipe returned empty data")
+        return None
+
+    log_info(f"Read {len(data)} bytes from stdin pipe")
+    return data
+
+
+def should_stream_via_stdin(task_text: str, piped: bool) -> bool:
+    """
+    判定是否通过 stdin 传递任务：
+    - 有管道输入
+    - 文本包含换行
+    - 文本包含反斜杠
+    - 文本长度 > 800
+    """
+    if piped:
+        return True
+    if '\n' in task_text:
+        return True
+    if '\\' in task_text:
+        return True
+    if len(task_text) > 800:
+        return True
+    return False
+
+
+def build_codex_args(params: dict, target_arg: str) -> list:
+    """
+    构建 codex CLI 参数
+
+    Args:
+        params: 参数字典
+        target_arg: 最终传递给 codex 的参数（'-' 或具体 task 文本）
+    """
     if params['mode'] == 'resume':
         return [
             'codex', 'e',
@@ -97,39 +157,62 @@ def build_codex_args(params: dict) -> list:
             '--json',
             'resume',
             params['session_id'],
-            params['task']
+            target_arg
         ]
     else:
-        return [
+        base_args = [
             'codex', 'e',
-            '-m', params['model'],
             '--dangerously-bypass-approvals-and-sandbox',
             '--skip-git-repo-check',
             '-C', params['workdir'],
             '--json',
-            params['task']
+            target_arg
         ]
 
+        # Only include model flag when a default model is configured
+        if DEFAULT_MODEL:
+            base_args[2:2] = ['-m', DEFAULT_MODEL]
 
-def main():
-    params = parse_args()
-    codex_args = build_codex_args(params)
-    timeout_sec = resolve_timeout()
+        return base_args
 
+
+def run_codex_process(codex_args, task_text: str, use_stdin: bool, timeout_sec: int):
+    """
+    启动 codex 子进程，处理 stdin / JSON 行输出和错误，成功时返回 (last_agent_message, thread_id)。
+    失败路径上负责日志和退出码。
+    """
     thread_id: Optional[str] = None
     last_agent_message: Optional[str] = None
+    process: Optional[subprocess.Popen] = None
 
     try:
-        # 启动 codex 子进程
+        # 启动 codex 子进程（文本模式管道）
+        log_info(f"Starting codex with args: {' '.join(codex_args[:5])}...")
         process = subprocess.Popen(
             codex_args,
+            stdin=subprocess.PIPE if use_stdin else None,
             stdout=subprocess.PIPE,
-            stderr=sys.stderr,  # 错误直接透传到 stderr
+            stderr=sys.stderr,
             text=True,
-            bufsize=1  # 行缓冲
+            bufsize=1,
         )
+        log_info(f"Process started with PID: {process.pid}")
+
+        # 如果使用 stdin 模式，写入任务到 stdin 并关闭
+        if use_stdin and process.stdin is not None:
+            log_info(f"Writing {len(task_text)} chars to stdin...")
+            process.stdin.write(task_text)
+            process.stdin.flush()  # 强制刷新缓冲区，避免大任务死锁
+            process.stdin.close()
+            log_info("Stdin closed")
 
         # 逐行解析 JSON 输出
+        if process.stdout is None:
+            log_error('Codex stdout pipe not available')
+            sys.exit(1)
+
+        log_info("Reading stdout...")
+
         for line in process.stdout:
             line = line.strip()
             if not line:
@@ -152,35 +235,26 @@ def main():
             except json.JSONDecodeError:
                 log_warn(f"Failed to parse line: {line}")
 
-        # 等待进程结束
+        # 等待进程结束并检查退出码
         returncode = process.wait(timeout=timeout_sec)
+        if returncode != 0:
+            log_error(f'Codex exited with status {returncode}')
+            sys.exit(returncode)
 
-        # 优先检查是否有有效输出，而非退出码
-        if last_agent_message:
-            # 输出 agent_message
-            sys.stdout.write(f"{last_agent_message}\n")
+        if not last_agent_message:
+            log_error('Codex completed without agent_message output')
+            sys.exit(1)
 
-            # 输出 session_id（如果存在）
-            if thread_id:
-                sys.stdout.write(f"\n---\nSESSION_ID: {thread_id}\n")
-
-            # 有输出但退出码非零，输出警告而非失败
-            if returncode != 0:
-                log_warn(f'Codex completed with non-zero status {returncode} but produced valid output')
-
-            sys.exit(0)
-        else:
-            # 没有输出才算真正失败
-            log_error(f'Codex exited with status {returncode} without agent_message output')
-            sys.exit(returncode if returncode != 0 else 1)
+        return last_agent_message, thread_id
 
     except subprocess.TimeoutExpired:
         log_error('Codex execution timeout')
-        process.kill()
-        try:
-            process.wait(timeout=FORCE_KILL_DELAY)
-        except subprocess.TimeoutExpired:
-            pass
+        if process is not None:
+            process.kill()
+            try:
+                process.wait(timeout=FORCE_KILL_DELAY)
+            except subprocess.TimeoutExpired:
+                pass
         sys.exit(124)
 
     except FileNotFoundError:
@@ -188,12 +262,63 @@ def main():
         sys.exit(127)
 
     except KeyboardInterrupt:
-        process.terminate()
-        try:
-            process.wait(timeout=FORCE_KILL_DELAY)
-        except subprocess.TimeoutExpired:
-            process.kill()
+        log_error("Codex interrupted by user")
+        if process is not None:
+            process.terminate()
+            try:
+                process.wait(timeout=FORCE_KILL_DELAY)
+            except subprocess.TimeoutExpired:
+                process.kill()
         sys.exit(130)
+
+
+def main():
+    log_info("Script started")
+    params = parse_args()
+    log_info(f"Parsed args: mode={params['mode']}, task_len={len(params['task'])}")
+    timeout_sec = resolve_timeout()
+    log_info(f"Timeout: {timeout_sec}s")
+
+    piped_task = read_piped_task()
+    piped = piped_task is not None
+    task_text = piped_task if piped else params['task']
+
+    use_stdin = should_stream_via_stdin(task_text, piped)
+
+    if use_stdin:
+        reasons = []
+        if piped:
+            reasons.append('piped input')
+        if '\n' in task_text:
+            reasons.append('newline')
+        if '\\' in task_text:
+            reasons.append('backslash')
+        if len(task_text) > 800:
+            reasons.append('length>800')
+
+        if reasons:
+            log_warn(f"Using stdin mode for task due to: {', '.join(reasons)}")
+
+    target_arg = '-' if use_stdin else params['task']
+    codex_args = build_codex_args(params, target_arg)
+
+    log_info('codex running...')
+
+    last_agent_message, thread_id = run_codex_process(
+        codex_args=codex_args,
+        task_text=task_text,
+        use_stdin=use_stdin,
+        timeout_sec=timeout_sec,
+    )
+
+    # 输出 agent_message
+    sys.stdout.write(f"{last_agent_message}\n")
+
+    # 输出 session_id（如果存在）
+    if thread_id:
+        sys.stdout.write(f"\n---\nSESSION_ID: {thread_id}\n")
+
+    sys.exit(0)
 
 
 if __name__ == '__main__':

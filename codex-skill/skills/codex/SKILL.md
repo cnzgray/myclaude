@@ -14,26 +14,31 @@ Execute Codex CLI commands and parse structured JSON responses. Supports file re
 - Complex code analysis requiring deep understanding
 - Large-scale refactoring across multiple files
 - Automated code generation with safety controls
-- Tasks requiring specialized reasoning models (gpt-5.1, gpt-5.1-codex-max)
 
 ## Usage
 
-**推荐方式**（使用 uv run，自动管理 Python 环境）：
+**Mandatory**: Run every automated invocation through the Bash tool in the foreground with the command below, keeping the `timeout` parameter fixed at `7200000` milliseconds (do not change it or use any other entry point).
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
 ```
 
-**备选方式**（直接执行或使用 Python）：
+**Foreground only (no background/BashOutput)**: Never set `background: true`, never accept Claude's “Running in the background” mode, and avoid `BashOutput` streaming loops. Keep a single foreground Bash call per Codex task; if work might be long, split it into smaller foreground runs instead of offloading to background execution.
+
+**Optional methods** (direct execution or via Python):
 ```bash
-[SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
-# 或
-python3 [SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
+[CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
+# or
+python3 [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
 ```
 
-恢复会话:
+Resume a session:
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/codex.py resume <session_id> "<task>" [model] [working_dir]
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py resume <session_id> "<task>" [working_dir]
 ```
+
+## Environment Variables
+- **CODEX_TIMEOUT**: Override timeout in milliseconds (default: 7200000 = 2 hours)
+  - Example: `export CODEX_TIMEOUT=3600000` for 1 hour
 
 ## Timeout Control
 
@@ -46,9 +51,6 @@ uv run [SKILL_BASE_DIR]/scripts/codex.py resume <session_id> "<task>" [model] [w
 ### Parameters
 
 - `task` (required): Task description, supports `@file` references
-- `model` (optional): Model to use (default: gpt-5.1-codex-max)
-  - `gpt-5.1-codex-max`: Default, optimized for code
-  - `gpt-5.1`: Fast general purpose
 - `working_dir` (optional): Working directory (default: current)
 
 ### Return Format
@@ -66,23 +68,26 @@ Error format (stderr):
 ERROR: Error message
 ```
 
+Return only the final agent message and session ID—do not paste raw `BashOutput` logs or background-task chatter into the conversation.
+
 ### Invocation Pattern
 
-When calling via Bash tool, always include the timeout parameter:
+All automated executions may only invoke `uv run [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" ...` through the Bash tool in the foreground, and the `timeout` must remain fixed at `7200000` (non-negotiable):
 ```
 Bash tool parameters:
-- command: uv run [SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
+- command: uv run [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
 - timeout: 7200000
 - description: <brief description of the task>
 ```
+Run every call in the foreground—never append `&` to background it—so logs and errors stay visible for timely interruption or diagnosis.
 
 Alternatives:
 ```
 # Direct execution (simplest)
-- command: [SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
+- command: [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
 
 # Using python3
-- command: python3 [SKILL_BASE_DIR]/scripts/codex.py "<task>" [model] [working_dir]
+- command: python3 [CURRENT_SKILL_DIR]/scripts/codex.py "<task>" [working_dir]
 ```
 
 ### Examples
@@ -90,46 +95,59 @@ Alternatives:
 **Basic code analysis:**
 ```bash
 # Recommended: via uv run (auto-manages Python environment)
-uv run [SKILL_BASE_DIR]/scripts/codex.py "explain @src/main.ts"
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py "explain @src/main.ts"
 # timeout: 7200000
 
 # Alternative: direct execution
-[SKILL_BASE_DIR]/scripts/codex.py "explain @src/main.ts"
+[CURRENT_SKILL_DIR]/scripts/codex.py "explain @src/main.ts"
 ```
 
-**Refactoring with specific model:**
+**Refactoring with custom model (via environment variable):**
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/codex.py "refactor @src/utils for performance" "gpt-5.1-codex-max"
+# Set model via environment variable
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py "refactor @src/utils for performance"
 # timeout: 7200000
 ```
 
 **Multi-file analysis:**
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/codex.py "analyze @. and find security issues" "gpt-5.1-codex-max" "/path/to/project"
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py "analyze @. and find security issues" "/path/to/project"
 # timeout: 7200000
 ```
 
 **Resume previous session:**
 ```bash
 # First session
-uv run [SKILL_BASE_DIR]/scripts/codex.py "add comments to @utils.js" "gpt-5.1-codex-max"
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py "add comments to @utils.js"
 # Output includes: SESSION_ID: 019a7247-ac9d-71f3-89e2-a823dbd8fd14
 
 # Continue the conversation
-uv run [SKILL_BASE_DIR]/scripts/codex.py resume 019a7247-ac9d-71f3-89e2-a823dbd8fd14 "now add type hints"
+uv run [CURRENT_SKILL_DIR]/scripts/codex.py resume 019a7247-ac9d-71f3-89e2-a823dbd8fd14 "now add type hints"
 # timeout: 7200000
 ```
 
 **Using python3 directly (alternative):**
 ```bash
-python3 [SKILL_BASE_DIR]/scripts/codex.py "your task here"
+python3 [CURRENT_SKILL_DIR]/scripts/codex.py "your task here"
 ```
+
+### Large Task Protocol
+
+- For every large task, first produce a canonical task list that enumerates the Task ID, description, file/directory scope, dependencies, test commands, and the expected Codex Bash invocation.
+- Tasks without dependencies should be executed concurrently via multiple foreground Bash calls (you can keep separate terminal windows) and each run must log start/end times plus any shared resource usage.
+- Reuse context aggressively (such as @spec.md or prior analysis output), and after concurrent execution finishes, reconcile against the task list to report which items completed and which slipped.
+
+| ID | Description | Scope | Dependencies | Tests | Command |
+| --- | --- | --- | --- | --- | --- |
+| T1 | Review @spec.md to extract requirements | docs/, @spec.md | None | None | uv run [CURRENT_SKILL_DIR]/scripts/codex.py "analyze requirements @spec.md" |
+| T2 | Implement the module and add test cases | src/module | T1 | npm test -- --runInBand | uv run [CURRENT_SKILL_DIR]/scripts/codex.py "implement and test @src/module" |
 
 ## Notes
 
 - **Recommended**: Use `uv run` for automatic Python environment management (requires uv installed)
 - **Alternative**: Direct execution `./codex.py` (uses system Python via shebang)
 - Python implementation using standard library (zero dependencies)
+- All automated runs must use the Bash tool with the fixed timeout to provide dual timeout protection and unified logging/exit semantics; any alternative approach is limited to manual foreground execution.
 - Cross-platform compatible (Windows/macOS/Linux)
 - PEP 723 compliant (inline script metadata)
 - Runs with `--dangerously-bypass-approvals-and-sandbox` for automation (new sessions only)

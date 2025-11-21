@@ -20,15 +20,20 @@ Execute Gemini CLI commands with support for multiple models and flexible prompt
 
 **推荐方式**（使用 uv run，自动管理 Python 环境）：
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/gemini.py -m <model> -p "<prompt>" [working_dir]
+uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
 ```
 
 **备选方式**（直接执行或使用 Python）：
 ```bash
-[SKILL_BASE_DIR]/scripts/gemini.py -m <model> -p "<prompt>" [working_dir]
+[CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
 # 或
-python3 [SKILL_BASE_DIR]/scripts/gemini.py -m <model> -p "<prompt>" [working_dir]
+python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
 ```
+
+## Environment Variables
+
+- **GEMINI_TIMEOUT**: Override timeout in milliseconds (default: 7200000 = 2 hours)
+  - Example: `export GEMINI_TIMEOUT=3600000` for 1 hour
 
 ## Timeout Control
 
@@ -38,10 +43,6 @@ python3 [SKILL_BASE_DIR]/scripts/gemini.py -m <model> -p "<prompt>" [working_dir
 
 ### Parameters
 
-- `-m, --model` (optional): Model to use (default: gemini-2.5-pro)
-  - `gemini-2.5-pro`: Latest flagship model
-  - `gemini-2.5-flash`: Fast, efficient model
-  - `gemini-1.5-pro`: Previous generation
 - `-p, --prompt` (required): Task prompt or question
 - `working_dir` (optional): Working directory (default: current)
 
@@ -65,7 +66,7 @@ When calling via Bash tool, always include the timeout parameter:
 
 ```yaml
 Bash tool parameters:
-- command: uv run [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "<prompt>"
+- command: uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
 - timeout: 7200000
 - description: <brief description of the task>
 ```
@@ -74,10 +75,10 @@ Alternatives:
 
 ```yaml
 # Direct execution (simplest)
-- command: [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "<prompt>"
+- command: [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
 
 # Using python3
-- command: python3 [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "<prompt>"
+- command: python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
 ```
 
 ### Examples
@@ -86,38 +87,38 @@ Alternatives:
 
 ```bash
 # Recommended: via uv run
-uv run [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "explain quantum computing"
+uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "explain quantum computing"
 # timeout: 7200000
 
 # Alternative: direct execution
-[SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "explain quantum computing"
+[CURRENT_SKILL_DIR]/scripts/gemini.py -p "explain quantum computing"
 ```
 
 **Code analysis:**
 
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-flash -p "review this code for security issues: $(cat app.py)"
+uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "review this code for security issues: $(cat app.py)"
 # timeout: 7200000
 ```
 
 **With specific working directory:**
 
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "analyze project structure" "/path/to/project"
+uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "analyze project structure" "/path/to/project"
 # timeout: 7200000
 ```
 
 **Using fast model:**
 
 ```bash
-uv run [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-flash -p "quick code suggestion"
+uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "quick code suggestion"
 # timeout: 7200000
 ```
 
 **Using python3 directly (alternative):**
 
 ```bash
-python3 [SKILL_BASE_DIR]/scripts/gemini.py -m gemini-2.5-pro -p "your prompt here"
+python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "your prompt here"
 ```
 
 ## Notes
