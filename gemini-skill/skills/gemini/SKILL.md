@@ -17,34 +17,32 @@ Execute Gemini CLI commands with support for multiple models and flexible prompt
 - Alternative perspective on code problems
 
 ## Usage
-
-**推荐方式**（使用 uv run，自动管理 Python 环境）：
+**Mandatory**: Run via uv with fixed timeout 7200000ms (foreground):
 ```bash
-uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
+uv run ~/.claude/skills/gemini/scripts/gemini.py "<prompt>" [working_dir]
 ```
 
-**备选方式**（直接执行或使用 Python）：
+**Optional** (direct execution or using Python):
 ```bash
-[CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
-# 或
-python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>" [working_dir]
+~/.claude/skills/gemini/scripts/gemini.py "<prompt>" [working_dir]
+# or
+python3 ~/.claude/skills/gemini/scripts/gemini.py "<prompt>" [working_dir]
 ```
 
 ## Environment Variables
 
-- **GEMINI_TIMEOUT**: Override timeout in milliseconds (default: 7200000 = 2 hours)
-  - Example: `export GEMINI_TIMEOUT=3600000` for 1 hour
+- **GEMINI_MODEL**: Configure model (default: `gemini-3-pro-preview`)
+  - Example: `export GEMINI_MODEL=gemini-3`
 
 ## Timeout Control
 
-- **Built-in**: Script enforces 2-hour timeout by default
-- **Override**: Set `GEMINI_TIMEOUT` environment variable (in milliseconds)
-- **Bash tool**: Always set `timeout: 7200000` parameter for double protection
+- **Fixed**: 7200000 milliseconds (2 hours), immutable
+- **Bash tool**: Always set `timeout: 7200000` for double protection
 
 ### Parameters
 
-- `-p, --prompt` (required): Task prompt or question
-- `working_dir` (optional): Working directory (default: current)
+- `prompt` (required): Task prompt or question
+- `working_dir` (optional): Working directory (default: current directory)
 
 ### Return Format
 
@@ -66,7 +64,7 @@ When calling via Bash tool, always include the timeout parameter:
 
 ```yaml
 Bash tool parameters:
-- command: uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
+- command: uv run ~/.claude/skills/gemini/scripts/gemini.py "<prompt>"
 - timeout: 7200000
 - description: <brief description of the task>
 ```
@@ -75,10 +73,10 @@ Alternatives:
 
 ```yaml
 # Direct execution (simplest)
-- command: [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
+- command: ~/.claude/skills/gemini/scripts/gemini.py "<prompt>"
 
 # Using python3
-- command: python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "<prompt>"
+- command: python3 ~/.claude/skills/gemini/scripts/gemini.py "<prompt>"
 ```
 
 ### Examples
@@ -86,39 +84,28 @@ Alternatives:
 **Basic query:**
 
 ```bash
-# Recommended: via uv run
-uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "explain quantum computing"
+uv run ~/.claude/skills/gemini/scripts/gemini.py "explain quantum computing"
 # timeout: 7200000
-
-# Alternative: direct execution
-[CURRENT_SKILL_DIR]/scripts/gemini.py -p "explain quantum computing"
 ```
 
 **Code analysis:**
 
 ```bash
-uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "review this code for security issues: $(cat app.py)"
+uv run ~/.claude/skills/gemini/scripts/gemini.py "review this code for security issues: $(cat app.py)"
 # timeout: 7200000
 ```
 
 **With specific working directory:**
 
 ```bash
-uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "analyze project structure" "/path/to/project"
-# timeout: 7200000
-```
-
-**Using fast model:**
-
-```bash
-uv run [CURRENT_SKILL_DIR]/scripts/gemini.py -p "quick code suggestion"
+uv run ~/.claude/skills/gemini/scripts/gemini.py "analyze project structure" "/path/to/project"
 # timeout: 7200000
 ```
 
 **Using python3 directly (alternative):**
 
 ```bash
-python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "your prompt here"
+python3 ~/.claude/skills/gemini/scripts/gemini.py "your prompt here"
 ```
 
 ## Notes
@@ -129,5 +116,5 @@ python3 [CURRENT_SKILL_DIR]/scripts/gemini.py -p "your prompt here"
 - Cross-platform compatible (Windows/macOS/Linux)
 - PEP 723 compliant (inline script metadata)
 - Requires Gemini CLI installed and authenticated
-- Supports all Gemini model variants
+- Supports all Gemini model variants (configure via `GEMINI_MODEL` environment variable)
 - Output is streamed directly from Gemini CLI
