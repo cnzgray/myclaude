@@ -20,7 +20,7 @@ Execute Codex CLI commands and parse structured JSON responses. Supports file re
 **Mandatory**: Run every automated invocation through the Bash tool in the foreground with **HEREDOC syntax** to avoid shell quoting issues, keeping the `timeout` parameter fixed at `7200000` milliseconds (do not change it or use any other entry point).
 
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py - [working_dir] <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - [working_dir] <<'EOF'
 <task content here>
 EOF
 ```
@@ -32,12 +32,12 @@ EOF
 **Simple tasks** (backward compatibility):
 For simple single-line tasks without special characters, you can still use direct quoting:
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py "simple task here" [working_dir]
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py "simple task here" [working_dir]
 ```
 
 **Resume a session with HEREDOC:**
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py resume <session_id> - [working_dir] <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py resume <session_id> - [working_dir] <<'EOF'
 <task content>
 EOF
 ```
@@ -46,7 +46,7 @@ EOF
 - **Bash/Zsh**: Use `<<'EOF'` (single quotes prevent variable expansion)
 - **PowerShell 5.1+**: Use `@'` and `'@` (here-string syntax)
   ```powershell
-  uv run ~/.claude/skills/codex/scripts/codex.py - @'
+  uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - @'
   task content
   '@
   ```
@@ -91,7 +91,7 @@ All automated executions must use HEREDOC syntax through the Bash tool in the fo
 
 ```
 Bash tool parameters:
-- command: uv run ~/.claude/skills/codex/scripts/codex.py - [working_dir] <<'EOF'
+- command: uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - [working_dir] <<'EOF'
   <task content>
   EOF
 - timeout: 7200000
@@ -107,18 +107,18 @@ Run every call in the foreground—never append `&` to background it—so logs a
 **Basic code analysis:**
 ```bash
 # Recommended: via uv run with HEREDOC (handles any special characters)
-uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'
 explain @src/main.ts
 EOF
 # timeout: 7200000
 
 # Alternative: simple direct quoting (if task is simple)
-uv run ~/.claude/skills/codex/scripts/codex.py "explain @src/main.ts"
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py "explain @src/main.ts"
 ```
 
 **Refactoring with multiline instructions:**
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'
 refactor @src/utils for performance:
 - Extract duplicate code into helpers
 - Use memoization for expensive calculations
@@ -129,7 +129,7 @@ EOF
 
 **Multi-file analysis:**
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py - "/path/to/project" <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - "/path/to/project" <<'EOF'
 analyze @. and find security issues:
 1. Check for SQL injection vulnerabilities
 2. Identify XSS risks in templates
@@ -142,13 +142,13 @@ EOF
 **Resume previous session:**
 ```bash
 # First session
-uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'
 add comments to @utils.js explaining the caching logic
 EOF
 # Output includes: SESSION_ID: 019a7247-ac9d-71f3-89e2-a823dbd8fd14
 
 # Continue the conversation with more context
-uv run ~/.claude/skills/codex/scripts/codex.py resume 019a7247-ac9d-71f3-89e2-a823dbd8fd14 - <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py resume 019a7247-ac9d-71f3-89e2-a823dbd8fd14 - <<'EOF'
 now add TypeScript type hints and handle edge cases where cache is null
 EOF
 # timeout: 7200000
@@ -156,7 +156,7 @@ EOF
 
 **Task with code snippets and special characters:**
 ```bash
-uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'
+uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'
 Fix the bug in @app.js where the regex /\d+/ doesn't match "123"
 The current code is:
   const re = /\d+/;
@@ -173,8 +173,8 @@ EOF
 
 | ID | Description | Scope | Dependencies | Tests | Command |
 | --- | --- | --- | --- | --- | --- |
-| T1 | Review @spec.md to extract requirements | docs/, @spec.md | None | None | `uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'`<br/>`analyze requirements @spec.md`<br/>`EOF` |
-| T2 | Implement the module and add test cases | src/module | T1 | npm test -- --runInBand | `uv run ~/.claude/skills/codex/scripts/codex.py - <<'EOF'`<br/>`implement and test @src/module`<br/>`EOF` |
+| T1 | Review @spec.md to extract requirements | docs/, @spec.md | None | None | `uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'`<br/>`analyze requirements @spec.md`<br/>`EOF` |
+| T2 | Implement the module and add test cases | src/module | T1 | npm test -- --runInBand | `uv run [CURRENT_SKILL_BASE_DIR]/scripts/codex.py - <<'EOF'`<br/>`implement and test @src/module`<br/>`EOF` |
 
 ## Notes
 

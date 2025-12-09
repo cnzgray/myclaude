@@ -1,0 +1,9 @@
+{
+  "name": "agent-dev-workflow",
+  "version": "1.0.0",
+  "description": "Minimal lightweight development workflow with requirements clarification, implementation, and mandatory 90% test coverage",
+  "author": {
+    "name": "cnzgray",
+    "email": "cnzgray@gmail.com"
+  }
+}

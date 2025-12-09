@@ -18,6 +18,16 @@
             "name": "gemini-skill",
             "source": "./gemini-skill",
             "description": "实现Claude Code与Gemini之间的协作开发的插件，注意这个插件与codex-skill插件不能同时启用"
+        },
+        {
+            "name": "development-essentials",
+            "source": "./development-essentials",
+            "description": "Essential development commands for coding, debugging, testing, optimization, and documentation"
+        },
+        {
+            "name": "agent-dev-workflow",
+            "source": "./agent-dev-workflow",
+            "description": "Minimal lightweight development workflow with requirements clarification, implementation, and mandatory 90% test coverage"
         }
     ]
 }
