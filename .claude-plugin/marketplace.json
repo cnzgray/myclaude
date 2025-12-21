@@ -33,6 +33,16 @@
             "name": "agent-dev-workflow",
             "source": "./agent-dev-workflow",
             "description": "Minimal lightweight development workflow with requirements clarification, implementation, and mandatory 90% test coverage"
+        },
+        {
+            "name": "cexll",
+            "source": "./cexll",
+            "description": "从猴哥仓库中选取的一些插件合集"
+        },
+        {
+            "name": "zcf",
+            "source": "./zcf",
+            "description": "ZCF的一些命令合集"
         }
     ]
 }
