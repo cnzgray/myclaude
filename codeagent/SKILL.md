@@ -19,22 +19,22 @@ Execute codeagent-wrapper commands with pluggable AI backends (Codex, Claude, Ge
 
 **HEREDOC syntax** (recommended):
 ```bash
-~/.claude/skills/codeagent/codeagent-wrapper - [working_dir] <<'EOF'
+codeagent-wrapper - [working_dir] <<'EOF'
 <task content here>
 EOF
 ```
 
 **With backend selection**:
 ```bash
-~/.claude/skills/codeagent/codeagent-wrapper --backend claude - <<'EOF'
+codeagent-wrapper --backend claude - <<'EOF'
 <task content here>
 EOF
 ```
 
 **Simple tasks**:
 ```bash
-~/.claude/skills/codeagent/codeagent-wrapper "simple task" [working_dir]
-~/.claude/skills/codeagent/codeagent-wrapper --backend gemini "simple task"
+codeagent-wrapper "simple task" [working_dir]
+codeagent-wrapper --backend gemini "simple task"
 ```
 
 ## Backends
@@ -74,7 +74,7 @@ EOF
 - `task` (required): Task description, supports `@file` references
 - `working_dir` (optional): Working directory (default: current)
 - `--backend` (optional): Select AI backend (codex/claude/gemini, default: codex)
-  - **Note**: Claude backend defaults to `--dangerously-skip-permissions` for automation compatibility
+  - **Note**: Claude backend only adds `--dangerously-skip-permissions` when explicitly enabled
 
 ## Return Format
 
@@ -89,12 +89,12 @@ SESSION_ID: 019a7247-ac9d-71f3-89e2-a823dbd8fd14
 
 ```bash
 # Resume with default backend
-~/.claude/skills/codeagent/codeagent-wrapper resume <session_id> - <<'EOF'
+codeagent-wrapper resume <session_id> - <<'EOF'
 <follow-up task>
 EOF
 
 # Resume with specific backend
-~/.claude/skills/codeagent/codeagent-wrapper --backend claude resume <session_id> - <<'EOF'
+codeagent-wrapper --backend claude resume <session_id> - <<'EOF'
 <follow-up task>
 EOF
 ```
@@ -103,7 +103,7 @@ EOF
 
 **With global backend**:
 ```bash
-~/.claude/skills/codeagent/codeagent-wrapper --parallel --backend claude <<'EOF'
+codeagent-wrapper --parallel --backend claude <<'EOF'
 ---TASK---
 id: task1
 workdir: /path/to/dir
@@ -119,7 +119,7 @@ EOF
 
 **With per-task backend**:
 ```bash
-~/.claude/skills/codeagent/codeagent-wrapper --parallel <<'EOF'
+codeagent-wrapper --parallel <<'EOF'
 ---TASK---
 id: task1
 backend: codex
@@ -147,9 +147,9 @@ Set `CODEAGENT_MAX_PARALLEL_WORKERS` to limit concurrent tasks (default: unlimit
 ## Environment Variables
 
 - `CODEX_TIMEOUT`: Override timeout in milliseconds (default: 7200000 = 2 hours)
-- `CODEAGENT_SKIP_PERMISSIONS`: Control permission checks
-  - For **Claude** backend: Set to `true`/`1` to **disable** `--dangerously-skip-permissions` (default: enabled)
-  - For **Codex/Gemini** backends: Set to `true`/`1` to enable permission skipping (default: disabled)
+- `CODEAGENT_SKIP_PERMISSIONS`: Control Claude CLI permission checks
+  - For **Claude** backend: Set to `true`/`1` to add `--dangerously-skip-permissions` (default: disabled)
+  - For **Codex/Gemini** backends: Currently has no effect
 - `CODEAGENT_MAX_PARALLEL_WORKERS`: Limit concurrent tasks in parallel mode (default: unlimited, recommended: 8)
 
 ## Invocation Pattern
@@ -157,7 +157,7 @@ Set `CODEAGENT_MAX_PARALLEL_WORKERS` to limit concurrent tasks (default: unlimit
 **Single Task**:
 ```
 Bash tool parameters:
-- command: ~/.claude/skills/codeagent/codeagent-wrapper --backend <backend> - [working_dir] <<'EOF'
+- command: codeagent-wrapper --backend <backend> - [working_dir] <<'EOF'
   <task content>
   EOF
 - timeout: 7200000
@@ -167,7 +167,7 @@ Bash tool parameters:
 **Parallel Tasks**:
 ```
 Bash tool parameters:
-- command: ~/.claude/skills/codeagent/codeagent-wrapper --parallel --backend <backend> <<'EOF'
+- command: codeagent-wrapper --parallel --backend <backend> <<'EOF'
   ---TASK---
   id: task_id
   backend: <backend>  # Optional, overrides global
@@ -182,9 +182,8 @@ Bash tool parameters:
 
 ## Security Best Practices
 
-- **Claude Backend**: Defaults to `--dangerously-skip-permissions` for automation workflows
-  - To enforce permission checks with Claude: Set `CODEAGENT_SKIP_PERMISSIONS=true`
-- **Codex/Gemini Backends**: Permission checks enabled by default
+- **Claude Backend**: Permission checks enabled by default
+  - To skip checks: set `CODEAGENT_SKIP_PERMISSIONS=true` or pass `--skip-permissions`
 - **Concurrency Limits**: Set `CODEAGENT_MAX_PARALLEL_WORKERS` in production to prevent resource exhaustion
 - **Automation Context**: This wrapper is designed for AI-driven automation where permission prompts would block execution
 
