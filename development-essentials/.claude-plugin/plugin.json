@@ -1,9 +1,0 @@
-{
-  "name": "development-essentials",
-  "version": "1.0.0",
-  "description": "Essential development commands for coding, debugging, testing, optimization, and documentation",
-  "author": {
-    "name": "cnzgray",
-    "email": "cnzgray@gmail.com"
-  }
-}

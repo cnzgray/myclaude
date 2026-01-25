@@ -1,9 +1,0 @@
-{
-  "name": "gemini-skill",
-  "version": "1.0.0",
-  "description": "使用Skills能力实现Claude Code与Gemini之间的协作开发的插件",
-  "author": {
-    "name": "cnzgray",
-    "email": "cnzgray@gmail.com"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "name": "codex-bridge",
-  "version": "1.0.0",
-  "description": "实现Claude Code与Codex之间的协作开发的插件",
-  "author": {
-    "name": "cnzgray",
-    "email": "cnzgray@gmail.com"
-  }
-}

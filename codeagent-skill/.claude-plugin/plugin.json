@@ -1,9 +1,0 @@
-{
-  "name": "codeagent-wrapper",
-  "version": "1.0.0",
-  "description": "Execute codeagent-wrapper for multi-backend AI code tasks. Supports Codex, Claude, and Gemini backends with file references (@syntax) and structured output.",
-  "author": {
-    "name": "cnzgray",
-    "email": "cnzgray@gmail.com"
-  }
-}

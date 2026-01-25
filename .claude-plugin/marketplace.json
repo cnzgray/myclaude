@@ -1,48 +1,36 @@
 {
     "name": "my-marketplace",
     "owner": {
-        "name": "cnzgray"
+        "name": "cnzgray",
+        "email": "cnzgray@gmail.com"
+    },
+    "metadata": {
+        "description": "my skills",
+        "version": "1.0.0"
     },
     "plugins": [
         {
-            "name": "output-styles",
-            "source": "./output-styles",
-            "description": "定义Claude Output Styles的插件"
-        },
-        {
-            "name": "codeagent-skill",
-            "source": "./codeagent-skill",
-            "description": "Execute codeagent-wrapper for multi-backend AI code tasks. Supports Codex, Claude, and Gemini backends with file references (@syntax) and structured output."
-        },
-        {
-            "name": "codex-skill",
-            "source": "./codex-skill",
-            "description": "实现Claude Code与Codex之间的协作开发的插件，注意这个插件与gemini-skill插件不能同时启用"
-        },
-        {
-            "name": "gemini-skill",
-            "source": "./gemini-skill",
-            "description": "实现Claude Code与Gemini之间的协作开发的插件，注意这个插件与codex-skill插件不能同时启用"
-        },
-        {
-            "name": "development-essentials",
-            "source": "./development-essentials",
-            "description": "Essential development commands for coding, debugging, testing, optimization, and documentation"
-        },
-        {
-            "name": "agent-dev-workflow",
-            "source": "./agent-dev-workflow",
-            "description": "Minimal lightweight development workflow with requirements clarification, implementation, and mandatory 90% test coverage"
-        },
-        {
-            "name": "cexll",
-            "source": "./cexll",
-            "description": "从猴哥仓库中选取的一些插件合集"
-        },
-        {
             "name": "zcf",
-            "source": "./zcf",
-            "description": "ZCF的一些命令合集"
+            "version": "3.5.1",
+            "source": "./plugins/zcf",
+            "description": "ZCF的一些命令合集",
+            "strict": false,
+            "outputStyles": "./output-styles"
+        },
+        {
+            "name": "cexll-essentials",
+            "version": "6.1.2",
+            "description": "核心开发命令和工具",
+            "source": "./plugins/development-essentials",
+            "strict": false,
+            "outputStyles": "./output-styles"
+        },
+        {
+            "name": "cexll-dev",
+            "version": "6.1.2",
+            "description": "轻量级开发工作流",
+            "source": "./plugins/dev-workflow",
+            "strict": false
         }
     ]
 }

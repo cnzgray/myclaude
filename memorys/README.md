@@ -1,1 +1,0 @@
-几个CLAUDE.md提示词选择一个保存到 ~/.claude/CLAUDE.md 中即可。
