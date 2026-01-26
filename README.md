@@ -17,7 +17,7 @@
     "my-marketplace": {
       "source": {
         "source": "github",
-        "path": "cnzgray/myclaude"
+        "repo": "cnzgray/myclaude"
       }
     }
   },
