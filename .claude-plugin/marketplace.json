@@ -33,6 +33,13 @@
             "strict": false
         },
         {
+            "name": "dev-subagent",
+            "version": "0.1.0",
+            "description": "轻量级开发工作流（subagent 版本，不依赖 codeagent-wrapper）",
+            "source": "./plugins/dev-subagent-workflow",
+            "strict": false
+        },
+        {
             "name": "vue-skills",
             "version": "0.0.0",
             "description": "Agent skills for Vue 3 development",

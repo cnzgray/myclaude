@@ -30,6 +30,7 @@
 - **cexll-dev** - 开发工作流，包含需求澄清和并行 codeagent 执行
   - 依赖：需从 [cexll/myclaude releases](https://github.com/cexll/myclaude/releases) 安装 `codeagent-wrapper` 到 `~/.claude/bin/`
   - 推荐：配合原生 [Codex](https://github.com/openai/codex) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli) 使用效果更佳
+- **dev-subagent** - 开发工作流（subagent 版本），不依赖 `codeagent-wrapper`
 - **cexll-essentials** - 核心开发工具（debug、bugfix、optimize、code、review 等）
 - **zcf** - Git 实用工具（commit、worktree、分支清理、rollback）
 
