@@ -41,6 +41,16 @@
                 "repo": "hyf0/vue-skills"
             },
             "strict": false
+        },
+        {
+            "name": "vueuse-skills",
+            "version": "0.0.0",
+            "description": "Agent Skills for VueUse",
+            "source": {
+                "source": "github",
+                "repo": "vueuse/skills"
+            },
+            "strict": false
         }
     ]
 }
