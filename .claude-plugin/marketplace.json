@@ -18,8 +18,43 @@
             "outputStyles": "./output-styles"
         },
         {
+            "name": "cexll",
+            "version": "6.3.1",
+            "description": "Cexll All in One, 需要依赖codeagent-wrapper.",
+            "source": "./plugins",
+            "strict": false,
+            "commands": [
+                "./development-essentials/commands/ask.md",
+                "./development-essentials/commands/bugfix.md",
+                "./development-essentials/commands/code.md",
+                "./development-essentials/commands/debug.md",
+                "./development-essentials/commands/docs.md",
+                "./development-essentials/commands/enhance-prompt.md",
+                "./development-essentials/commands/optimize.md",
+                "./development-essentials/commands/refactor.md",
+                "./development-essentials/commands/review.md",
+                "./development-essentials/commands/test.md",
+                "./development-essentials/commands/think.md",
+                "./dev-workflow/commands/dev.md"
+            ],
+            "agents": [
+                "./development-essentials/agents/bugfix-verify.md",
+                "./development-essentials/agents/bugfix.md",
+                "./development-essentials/agents/code.md",
+                "./development-essentials/agents/debug.md",
+                "./development-essentials/agents/optimize.md",
+                "./dev-workflow/agents/dev-plan-generator.md"
+            ],
+            "outputStyles": "./development-essentials/output-styles",
+            "skills": [
+                "./cexll-skills/skills/codeagent",
+                "./cexll-skills/skills/do",
+                "./cexll-skills/skills/omo"
+            ]
+        },
+        {
             "name": "cexll-essentials",
-            "version": "6.1.2",
+            "version": "6.3.1",
             "description": "核心开发命令和工具",
             "source": "./plugins/development-essentials",
             "strict": false,
@@ -27,8 +62,8 @@
         },
         {
             "name": "cexll-dev",
-            "version": "6.1.2",
-            "description": "轻量级开发工作流",
+            "version": "6.3.1",
+            "description": "轻量级开发工作流, 需要依赖codeagent-wrapper.",
             "source": "./plugins/dev-workflow",
             "strict": false
         },
@@ -38,6 +73,43 @@
             "description": "轻量级开发工作流（subagent 版本，不依赖 codeagent-wrapper）",
             "source": "./plugins/dev-subagent-workflow",
             "strict": false
+        },
+        {
+            "name": "cexll-skills",
+            "version": "6.3.1",
+            "description": "Cexll Agent Skills, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/cexll-skills",
+            "strict": false
+        },
+        {
+            "name": "cexll-codeagent",
+            "version": "6.3.1",
+            "description": "CodeAgent Skill, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/cexll-skills",
+            "strict": false,
+            "skills": [
+                "./skills/codeagent"
+            ]
+        },
+        {
+            "name": "cexll-do",
+            "version": "6.3.1",
+            "description": "结构化特性开发工作流, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/cexll-skills",
+            "strict": false,
+            "skills": [
+                "./skills/do"
+            ]
+        },
+        {
+            "name": "cexll-omo",
+            "version": "6.3.1",
+            "description": "OmO多代理编排器, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/cexll-skills",
+            "strict": false,
+            "skills": [
+                "./skills/omo"
+            ]
         },
         {
             "name": "vue-skills",
