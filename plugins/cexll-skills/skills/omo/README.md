@@ -20,7 +20,7 @@ python install.py --module omo
 |-------|------|---------|-------|
 | `oracle` | Technical advisor | claude | claude-opus-4-5 |
 | `librarian` | External research | claude | claude-sonnet-4-5 |
-| `explore` | Codebase search | opencode | grok-code |
+| `repo-explore` | Codebase search | opencode | grok-code |
 | `develop` | Code implementation | codex | gpt-5.2 |
 | `frontend-ui-ux-engineer` | UI/UX specialist | gemini | gemini-3-pro |
 | `document-writer` | Documentation | gemini | gemini-3-flash |
@@ -31,7 +31,7 @@ This skill is **routing-first**, not a mandatory conveyor belt.
 
 | Signal | Add Agent |
 |--------|----------|
-| Code location/behavior unclear | `explore` |
+| Code location/behavior unclear | `repo-explore` |
 | External library/API usage unclear | `librarian` |
 | Risky change (multi-file, public API, security, perf) | `oracle` |
 | Implementation required | `develop` / `frontend-ui-ux-engineer` |
@@ -39,7 +39,7 @@ This skill is **routing-first**, not a mandatory conveyor belt.
 
 ### Skipping Heuristics
 
-- Skip `explore` when exact file path + line number is known
+- Skip `repo-explore` when exact file path + line number is known
 - Skip `oracle` when change is local + low-risk (single area, clear fix)
 - Skip implementation agents when user only wants analysis
 
@@ -47,13 +47,13 @@ This skill is **routing-first**, not a mandatory conveyor belt.
 
 | Task | Recipe |
 |------|--------|
-| Explain code | `explore` |
+| Explain code | `repo-explore` |
 | Small fix with known location | `develop` directly |
-| Bug fix, location unknown | `explore → develop` |
-| Cross-cutting refactor | `explore → oracle → develop` |
-| External API integration | `explore + librarian → oracle → develop` |
-| UI-only change | `explore → frontend-ui-ux-engineer` |
-| Docs-only change | `explore → document-writer` |
+| Bug fix, location unknown | `repo-explore → develop` |
+| Cross-cutting refactor | `repo-explore → oracle → develop` |
+| External API integration | `repo-explore + librarian → oracle → develop` |
+| UI-only change | `repo-explore → frontend-ui-ux-engineer` |
+| Docs-only change | `repo-explore → document-writer` |
 
 ## Context Pack Template
 
@@ -101,19 +101,19 @@ Timeout: 2 hours.
 ```bash
 # Analysis only
 /omo how does this function work?
-# → explore
+# → repo-explore
 
 # Bug fix with unknown location
 /omo fix the authentication bug
-# → explore → develop
+# → repo-explore → develop
 
 # Feature with external API
 /omo add Stripe payment integration
-# → explore + librarian → oracle → develop
+# → repo-explore + librarian → oracle → develop
 
 # UI change
 /omo redesign the dashboard layout
-# → explore → frontend-ui-ux-engineer
+# → repo-explore → frontend-ui-ux-engineer
 ```
 
 ## Configuration
@@ -135,7 +135,7 @@ Agent-model mappings in `~/.codeagent/models.json`:
       "model": "claude-sonnet-4-5-20250929",
       "yolo": true
     },
-    "explore": {
+    "repo-explore": {
       "backend": "opencode",
       "model": "opencode/grok-code"
     },
@@ -161,7 +161,7 @@ Agent-model mappings in `~/.codeagent/models.json`:
 
 1. **Never write code yourself** - delegate to implementation agents
 2. **Always pass context forward** - include original request + prior outputs
-3. **No direct grep/glob for non-trivial exploration** - use `explore`
+3. **No direct grep/glob for non-trivial exploration** - use `repo-explore`
 4. **No external docs guessing** - use `librarian`
 5. **Use fewest agents possible** - skipping is normal
 
