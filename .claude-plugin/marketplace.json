@@ -50,7 +50,20 @@
                 "./cexll-skills/skills/codeagent",
                 "./cexll-skills/skills/do",
                 "./cexll-skills/skills/omo"
-            ]
+            ],
+            "hooks": {
+                "Stop": [
+                    {
+                        "hooks": [
+                            {
+                                "description": "do loop hook for 7-phase workflow",
+                                "type": "command",
+                                "command": "${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/do/hooks/stop-hook.sh"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
             "name": "cexll-essentials",
@@ -79,7 +92,20 @@
             "version": "6.3.1",
             "description": "Cexll Agent Skills, 需要依赖codeagent-wrapper.",
             "source": "./plugins/cexll-skills",
-            "strict": false
+            "strict": false,
+            "hooks": {
+                "Stop": [
+                    {
+                        "hooks": [
+                            {
+                                "description": "do loop hook for 7-phase workflow",
+                                "type": "command",
+                                "command": "${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.sh"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
             "name": "cexll-codeagent",
@@ -99,7 +125,20 @@
             "strict": false,
             "skills": [
                 "./skills/do"
-            ]
+            ],
+            "hooks": {
+                "Stop": [
+                    {
+                        "hooks": [
+                            {
+                                "description": "do loop hook for 7-phase workflow",
+                                "type": "command",
+                                "command": "${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.sh"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
             "name": "cexll-omo",

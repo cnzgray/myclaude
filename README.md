@@ -24,6 +24,8 @@
 }
 ```
 
+如果不想设置为`output-style`可以复制[Linus Torvalds提示词](plugins/development-essentials/output-styles/linus-torvalds.md)中的内容到 `~/.claude/CLAUDE.md`中。
+
 在 `~/.codeagent/models.json` 中添加默认配置：
 
 ```json
