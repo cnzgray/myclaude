@@ -49,7 +49,9 @@
             "skills": [
                 "./cexll-skills/skills/codeagent",
                 "./cexll-skills/skills/do",
-                "./cexll-skills/skills/omo"
+                "./cexll-skills/skills/omo",
+                "./development-essentials/skills/product-requirements",
+                "./development-essentials/skills/prototype-prompt-generator"
             ],
             "hooks": {
                 "Stop": [
