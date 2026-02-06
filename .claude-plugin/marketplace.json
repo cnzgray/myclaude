@@ -60,7 +60,7 @@
                             {
                                 "description": "do loop hook for 7-phase workflow",
                                 "type": "command",
-                                "command": "${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/do/hooks/stop-hook.sh"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/do/hooks/stop-hook.py"
                             }
                         ]
                     }
@@ -102,7 +102,7 @@
                             {
                                 "description": "do loop hook for 7-phase workflow",
                                 "type": "command",
-                                "command": "${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.sh"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.py"
                             }
                         ]
                     }
@@ -135,7 +135,7 @@
                             {
                                 "description": "do loop hook for 7-phase workflow",
                                 "type": "command",
-                                "command": "${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.sh"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.py"
                             }
                         ]
                     }
