@@ -2,6 +2,7 @@
 description: Manage Git worktrees in project-level ../.zcf/project-name/ directory with smart defaults, IDE integration and content migration
 allowed-tools: Read(**), Exec(git worktree add, git worktree list, git worktree remove, git worktree prune, git branch, git checkout, git rev-parse, git stash, git cp, detect-ide, open-ide, which, command, basename, dirname)
 argument-hint: <add|list|remove|prune|migrate> [path] [-b <branch>] [-o|--open] [--track] [--guess-remote] [--detach] [--checkout] [--lock] [--migrate-from <source-path>] [--migrate-stash]
+model: sonnet
 # examples:
 #   - /git-worktree add feature-ui                     # create new branch 'feature-ui' from main/master
 #   - /git-worktree add feature-ui -o                  # create worktree and open directly in IDE
