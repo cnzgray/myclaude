@@ -54,13 +54,55 @@
                 "./development-essentials/skills/prototype-prompt-generator"
             ],
             "hooks": {
+                "UserPromptSubmit": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py user-prompt-submit"
+                            }
+                        ]
+                    }
+                ],
+                "SessionStart": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py session-start"
+                            }
+                        ]
+                    }
+                ],
+                "SessionEnd": [
+                    {
+                        "matcher": "clear|logout",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py session-end"
+                            }
+                        ]
+                    }
+                ],
                 "Stop": [
                     {
                         "hooks": [
                             {
-                                "description": "do loop hook for 7-phase workflow",
+                                "description": "do loop hook for 5-phase workflow",
                                 "type": "command",
                                 "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/do/hooks/stop-hook.py"
+                            }
+                        ]
+                    }
+                ],
+                "SubagentStop": [
+                    {
+                        "matcher": "code-reviewer",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/do/hooks/verify-loop.py"
                             }
                         ]
                     }
@@ -96,13 +138,55 @@
             "source": "./plugins/cexll-skills",
             "strict": false,
             "hooks": {
+                "UserPromptSubmit": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py user-prompt-submit"
+                            }
+                        ]
+                    }
+                ],
+                "SessionStart": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-start"
+                            }
+                        ]
+                    }
+                ],
+                "SessionEnd": [
+                    {
+                        "matcher": "clear|logout",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-end"
+                            }
+                        ]
+                    }
+                ],
                 "Stop": [
                     {
                         "hooks": [
                             {
-                                "description": "do loop hook for 7-phase workflow",
+                                "description": "do loop hook for 5-phase workflow",
                                 "type": "command",
                                 "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.py"
+                            }
+                        ]
+                    }
+                ],
+                "SubagentStop": [
+                    {
+                        "matcher": "code-reviewer",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/verify-loop.py"
                             }
                         ]
                     }
@@ -133,9 +217,20 @@
                     {
                         "hooks": [
                             {
-                                "description": "do loop hook for 7-phase workflow",
+                                "description": "do loop hook for 5-phase workflow",
                                 "type": "command",
                                 "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/stop-hook.py"
+                            }
+                        ]
+                    }
+                ],
+                "SubagentStop": [
+                    {
+                        "matcher": "code-reviewer",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/do/hooks/verify-loop.py"
                             }
                         ]
                     }
@@ -150,7 +245,40 @@
             "strict": false,
             "skills": [
                 "./skills/omo"
-            ]
+            ],
+            "hooks": {
+                "UserPromptSubmit": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py user-prompt-submit"
+                            }
+                        ]
+                    }
+                ],
+                "SessionStart": [
+                    {
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-start"
+                            }
+                        ]
+                    }
+                ],
+                "SessionEnd": [
+                    {
+                        "matcher": "clear|logout",
+                        "hooks": [
+                            {
+                                "type": "command",
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-end"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
             "name": "vue-skills",
