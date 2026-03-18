@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py user-prompt-submit"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py user-prompt-submit"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-start"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py session-start"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-end"
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py session-end"
           }
         ]
       }

@@ -1,0 +1,23 @@
+{
+  "skill_name": "ts-to-omo-md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "转换 /Users/zgray/Projects/99-zgray/13-workspace_github/oh-my-openagent/src/agents/oracle.ts 为 md 文档",
+      "expected_output": "生成的 md 文档应包含：# Oracle 标题、Input Contract、完整的 prompt 内容（带 XML 标签）、Tool Restrictions 列表、Scope Boundary、When to Use 表格、When NOT to Use 列表",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "分析 /Users/zgray/Projects/99-zgray/13-workspace_github/oh-my-openagent/src/agents/oracle.ts 中的 prompt metadata",
+      "expected_output": "提取出 promptAlias: Oracle、useWhen 数组、avoidWhen 数组、triggers 数组",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "将 oracle.ts 的 Tool Restrictions 部分转换为带说明的列表",
+      "expected_output": "从 createAgentToolRestrictions 数组提取工具列表，并为每个工具添加说明文字",
+      "files": []
+    }
+  ]
+}

@@ -49,42 +49,10 @@
             "skills": [
                 "./cexll-skills/skills/codeagent",
                 "./cexll-skills/skills/do",
-                "./cexll-skills/skills/omo",
                 "./development-essentials/skills/product-requirements",
                 "./development-essentials/skills/prototype-prompt-generator"
             ],
             "hooks": {
-                "UserPromptSubmit": [
-                    {
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py user-prompt-submit"
-                            }
-                        ]
-                    }
-                ],
-                "SessionStart": [
-                    {
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py session-start"
-                            }
-                        ]
-                    }
-                ],
-                "SessionEnd": [
-                    {
-                        "matcher": "clear|logout",
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/cexll-skills/skills/omo/hooks/omo_mode.py session-end"
-                            }
-                        ]
-                    }
-                ],
                 "Stop": [
                     {
                         "hooks": [
@@ -138,37 +106,6 @@
             "source": "./plugins/cexll-skills",
             "strict": false,
             "hooks": {
-                "UserPromptSubmit": [
-                    {
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py user-prompt-submit"
-                            }
-                        ]
-                    }
-                ],
-                "SessionStart": [
-                    {
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-start"
-                            }
-                        ]
-                    }
-                ],
-                "SessionEnd": [
-                    {
-                        "matcher": "clear|logout",
-                        "hooks": [
-                            {
-                                "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-end"
-                            }
-                        ]
-                    }
-                ],
                 "Stop": [
                     {
                         "hooks": [
@@ -238,13 +175,15 @@
             }
         },
         {
-            "name": "cexll-omo",
-            "version": "6.3.1",
+            "name": "omo",
+            "version": "1.0.0",
             "description": "OmO多代理编排器, 需要依赖codeagent-wrapper.",
-            "source": "./plugins/cexll-skills",
+            "source": "./plugins/omo-workflow",
             "strict": false,
             "skills": [
-                "./skills/omo"
+                "./omo",
+                "./omo-plan",
+                "./omo-execute"
             ],
             "hooks": {
                 "UserPromptSubmit": [
@@ -252,7 +191,7 @@
                         "hooks": [
                             {
                                 "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py user-prompt-submit"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py user-prompt-submit"
                             }
                         ]
                     }
@@ -262,7 +201,7 @@
                         "hooks": [
                             {
                                 "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-start"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py session-start"
                             }
                         ]
                     }
@@ -273,7 +212,7 @@
                         "hooks": [
                             {
                                 "type": "command",
-                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/skills/omo/hooks/omo_mode.py session-end"
+                                "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/omo_mode.py session-end"
                             }
                         ]
                     }

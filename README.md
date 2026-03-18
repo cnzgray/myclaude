@@ -55,7 +55,7 @@
       "reasoning": "xhigh",
       "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.1/cexll-skills/skills/omo/references/develop.md"
     },
-    "repo-explore": {
+    "code-scout": {
       "backend": "opencode",
       "model": "opencode/grok-code",
       "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.1/cexll-skills/skills/omo/references/explore.md"
