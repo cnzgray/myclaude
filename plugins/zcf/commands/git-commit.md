@@ -1,6 +1,6 @@
 ---
 description: Analyze changes with Git only and auto-generate conventional commit messages with optional emoji; suggests splitting commits when needed, runs local Git hooks by default (use --no-verify to skip)
-allowed-tools: Read(**), Exec(git status, git diff, git add, git restore --staged, git commit, git rev-parse, git config), Write(.git/COMMIT_EDITMSG), AskUserQuestion
+allowed-tools: Read(**), Exec(git status, git diff, git add, git restore --staged, git commit, git rev-parse, git config), AskUserQuestion
 argument-hint: [--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]
 # examples:
 #   - /git-commit                           # Analyze current changes, generate commit message
@@ -67,11 +67,10 @@ This command works **without any package manager/build tools**, using only **Git
    - Auto-infer `type` (`feat`/`fix`/`docs`/`refactor`/`test`/`chore`/`perf`/`style`/`ci`/`revert`...) and optional `scope`.
    - Generate message header: `[<emoji>] <type>(<scope>)?: <subject>` (first line ≤ 72 chars, imperative mood, emoji included only with `--emoji` flag).
    - Generate message body: bullet points (motivation, implementation details, impact scope, BREAKING CHANGE if any).
-   - Write draft to `.git/COMMIT_EDITMSG` for use with `git commit`.
 
 5. **Execute Commit**
-   - Single commit scenario: `git commit [-S] [--no-verify] [-s] -F .git/COMMIT_EDITMSG`
-   - Multiple commit scenario (if split accepted): Provide clear instructions for `git add <paths> && git commit ...` per group; execute sequentially if allowed.
+   - Single commit scenario: `git commit [-S] [--no-verify] [-s] -F - <<'EOF'` with the generated message via HEREDOC.
+   - Multiple commit scenario (if split accepted): Provide clear instructions for `git add <paths> && git commit -F - <<'EOF' ...` per group; execute sequentially if allowed.
 
 6. **Safe Rollback**
    - If mistakenly staged, use `git restore --staged <paths>` to unstage (command provides instructions, doesn't modify file contents).
@@ -152,6 +151,6 @@ This command works **without any package manager/build tools**, using only **Git
 
 - **Git only**: No package manager/build commands (`pnpm`/`npm`/`yarn` etc.).
 - **Respects hooks**: Executes local Git hooks by default; use `--no-verify` to skip.
-- **No source code changes**: Command only reads/writes `.git/COMMIT_EDITMSG` and staging area; doesn't directly edit working directory files.
+- **No source code changes**: Command only reads staging area and passes commit message via HEREDOC; doesn't directly edit working directory files.
 - **Safety prompts**: In rebase/merge conflicts, detached HEAD states, prompts to handle/confirm before continuing.
 - **Auditable and controllable**: If `confirm: true` is enabled, each actual `git add`/`git commit` step requires confirmation.
