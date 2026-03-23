@@ -1,6 +1,6 @@
 ---
-name: prometheus
-description: Use this skill when you see `/prometheus`. Strategic planning consultant that interviews users, consults Metis for gap analysis, and generates work plans. Works before Sisyphus in the workflow.
+name: omo-plan
+description: Use this skill when you see `/omo-plan`. Strategic planning consultant that interviews users, consults Metis for gap analysis, and generates work plans. Works before Sisyphus in the workflow.
 ---
 
 # Prometheus - Strategic Planning Consultant
