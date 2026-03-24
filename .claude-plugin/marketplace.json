@@ -181,9 +181,9 @@
             "source": "./plugins/omo-workflow",
             "strict": false,
             "skills": [
-                "./omo",
-                "./omo-plan",
-                "./omo-execute"
+                "./skills/omo",
+                "./skills/omo-plan",
+                "./skills/omo-execute"
             ],
             "hooks": {
                 "UserPromptSubmit": [
