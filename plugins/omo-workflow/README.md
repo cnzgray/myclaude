@@ -89,3 +89,54 @@ python install.py --module omo
 
 - `codeagent-wrapper`，并且支持 `--agent`
 - 后端 CLI：`claude`、`opencode`、`codex`、`gemini`
+
+## Routing 配置
+
+`task.py` 会按下面的顺序加载路由配置：
+
+1. 插件默认配置：`plugins/omo-workflow/hooks/routing_table.json`
+2. 用户覆盖配置：`~/.codeagent/omo/routing_table.json`
+3. 如果设置了 `OMO_ROUTING_TABLE_PATH`，则该文件会作为最高优先级覆盖层加载
+
+推荐做法是只把默认配置当作 sample，实际项目机器上统一维护 `~/.codeagent/omo/routing_table.json`。
+
+### 新 schema
+
+`category` 的职责是选择一个在 `~/.codeagent/models.json` 中已注册的 agent。`task.py` 负责把：
+
+- `category` 解析成目标 agent
+- `default_skills` 和调用时传入的 `--skills` 合并
+- 最终调用 `codeagent-wrapper --agent <resolved-agent>`
+
+示例：
+
+```json
+{
+  "version": 2,
+  "agent_aliases": {
+    "explore": "code-scout",
+    "implement": "deep"
+  },
+  "categories": {
+    "visual-engineering": {
+      "description": "Frontend, UI/UX, design, styling, animation.",
+      "default_skills": ["frontend-ui-ux"],
+      "route": {
+        "agent": "visual-engineering"
+      }
+    },
+    "deep": {
+      "description": "Deep implementation work.",
+      "route": {
+        "agent": "deep"
+      }
+    }
+  }
+}
+```
+
+兼容性说明：
+
+- 旧字段 `guard_map` 仍然会被识别为 `agent_aliases`
+- 旧字段 `categories.<name>.agent/backend/model/skills` 仍然会被兼容解析
+- 新配置推荐让 `route.agent` 直接等于 category 名，让具体 backend/model 完全由 `~/.codeagent/models.json` 决定
