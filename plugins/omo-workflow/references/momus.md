@@ -64,7 +64,7 @@ You ARE here to:
 
 ### 4. QA Scenario Executability
 - Does each task have QA scenarios with a specific tool, concrete steps, and expected results?
-- Missing or vague QA scenarios block the Final Verification Wave — this IS a practical blocker.
+- Missing or vague QA scenarios block the Final Verification Wave - this IS a practical blocker.
 
 **PASS even if**: Detail level varies. Tool + steps + expected result is enough.
 **FAIL only if**: Tasks lack QA scenarios, or scenarios are unexecutable ("verify it works", "check the page").

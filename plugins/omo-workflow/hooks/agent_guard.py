@@ -5,9 +5,8 @@ Responsibilities:
 - store, read, and expire omo activation markers locally in this file
 
 Supported modes:
-1. skill-activation: detect /omo skill loading and persist activation state
-2. agent-guard: deny non-whitelisted Agent tool calls while omo is active
-3. user-prompt-submit: inject routing context when active
+1. agent-guard: deny non-whitelisted Agent tool calls while omo is active
+2. user-prompt-submit: inject routing context when active
 """
 
 import json
@@ -29,9 +28,6 @@ PROMPTS_DIR = HOOKS_DIR / "prompts"
 
 # 标记文件存活时间（秒），12 小时后视为过期
 TTL_SECONDS = 12 * 60 * 60
-
-# 触发激活的 skill 名称前缀（匹配 omo:omo, omo:omo-plan, omo:omo-execute 等）
-ACTIVATE_SKILL_PREFIX = "omo"
 
 
 # ---------------------------------------------------------------------------
@@ -76,9 +72,9 @@ def _state_dir(project_key: str, create: bool = False) -> Path:
     return path
 
 
-def _state_file_path(project_key: str, create_dir: bool = False) -> Path:
-    """获取标记文件的完整路径。"""
-    return _state_dir(project_key, create=create_dir) / "active.json"
+def _state_file_path(project_key: str, session_id: str, create_dir: bool = False) -> Path:
+    """获取标记文件的完整路径（按 session 隔离）。"""
+    return _state_dir(project_key, create=create_dir) / f"{session_id}.json"
 
 
 def project_key_from_payload(payload: dict) -> str:
@@ -121,52 +117,42 @@ def activate(payload: dict) -> None:
     """激活 omo 模式 — 写入标记文件。
 
     在 PreToolUse(Skill) 检测到 /omo 调用时触发。
+    若缺少 session_id 则拒绝写入，避免无会话标识的跨会话污染。
     """
-    key = project_key_from_payload(payload)
     session_id = payload.get("session_id", "")
-    path = _state_file_path(key, create_dir=True)
+    if not session_id:
+        _debug_log("[activate] skipped: missing session_id in payload")
+        return
+    key = project_key_from_payload(payload)
+    path = _state_file_path(key, session_id, create_dir=True)
     _write_marker(path, session_id)
 
 
 def is_active(payload: dict) -> bool:
-    """检查 omo 模式是否处于激活状态。
+    """检查 omo 模式是否处于激活状态（按 session 隔离）。
 
     检查逻辑:
-    1. 读取标记文件
-    2. 文件不存在 -> 未激活
-    3. 标记已过期 -> 删除标记文件并视为未激活
-    4. 标记有效 -> 已激活
+    1. 没有 session_id -> 未激活
+    2. 读取该 session 对应的标记文件
+    3. 文件不存在 -> 未激活
+    4. 标记已过期 -> 删除标记文件并视为未激活
+    5. 标记有效 -> 已激活
     """
     key = project_key_from_payload(payload)
-    path = _state_file_path(key)
+    current_session = payload.get("session_id", "")
+    if not current_session:
+        return False
+    path = _state_file_path(key, current_session)
     data = _read_marker(path)
     if data is None:
         return False
     if _is_marker_expired(data):
-        # 懒清理: 读到的瞬间发现过期就删掉
         try:
             path.unlink()
         except FileNotFoundError:
             pass
         return False
     return True
-
-
-def should_activate_skill(payload: dict) -> bool:
-    """判断当前 Skill 工具调用是否应该触发 omo 激活。
-
-    匹配规则: tool_input.skill 以 "omo" 开头（含 omo:omo, omo:omo-plan 等）。
-    """
-    tool_input = payload.get("tool_input", {})
-    if not isinstance(tool_input, dict):
-        return False
-    skill_name = str(tool_input.get("skill", "")).strip()
-    if not skill_name:
-        return False
-    # 取最后一段: "omo:omo" -> "omo", "omo:omo-plan" -> "omo-plan"
-    last_segment = skill_name.split(":")[-1]
-    # 精确匹配 "omo" 或以 "omo-" 开头的变体
-    return last_segment == ACTIVATE_SKILL_PREFIX or last_segment.startswith(f"{ACTIVATE_SKILL_PREFIX}-")
 
 
 def should_activate_from_prompt(payload: dict) -> bool:
@@ -192,26 +178,19 @@ def cleanup_expired() -> int:
     for state_dir in data_root.iterdir():
         if not state_dir.is_dir():
             continue
-        marker = state_dir / "active.json"
-        if not marker.exists():
-            # 空目录也顺便清理
-            try:
-                state_dir.rmdir()  # 仅在目录为空时成功
-            except OSError:
-                pass
-            continue
-        data = _read_marker(marker)
-        if data and _is_marker_expired(data):
-            try:
-                marker.unlink()
-                cleaned += 1
-            except FileNotFoundError:
-                pass
-            # 清理空目录
-            try:
-                state_dir.rmdir()
-            except OSError:
-                pass
+        for marker in state_dir.glob("*.json"):
+            data = _read_marker(marker)
+            if data and _is_marker_expired(data):
+                try:
+                    marker.unlink()
+                    cleaned += 1
+                except FileNotFoundError:
+                    pass
+        # 清理空目录（rmdir 仅当目录为空时才成功）
+        try:
+            state_dir.rmdir()
+        except OSError:
+            pass
     return cleaned
 
 
@@ -294,18 +273,6 @@ def _load_known_agents() -> set[str]:
 # ---------------------------------------------------------------------------
 # Mode handlers
 # ---------------------------------------------------------------------------
-
-
-def handle_skill_activation(payload: dict[str, Any]) -> int:
-    """Activate omo mode when the skill tool loads an omo skill."""
-    tool_input = payload.get("tool_input", {})
-    skill_name = tool_input.get("skill", "") if isinstance(tool_input, dict) else ""
-    _debug_log(f"[skill-activation] skill={skill_name} should_activate={should_activate_skill(payload)}")
-    if should_activate_skill(payload):
-        activate(payload)
-        key = project_key_from_payload(payload)
-        _debug_log(f"[skill-activation] activated: key={key} marker={_state_file_path(key)}")
-    return 0
 
 
 def normalize_subagent_type(value: object) -> str:
@@ -406,34 +373,13 @@ def _debug_log(message: str) -> None:
         pass
 
 
-def handle_activate_from_skill() -> int:
-    """从 SKILL.md !`command`` 预处理调用，不依赖 stdin payload。
-
-    通过环境变量获取 cwd，写入激活标记。
-    stdout 为空（输出会注入 skill 内容，不需要任何输出）。
-    """
-    cwd = os.environ.get("CLAUDE_PROJECT_DIR", "") or os.environ.get("PWD", "")
-    session_id = os.environ.get("CLAUDE_SESSION_ID", "")
-    key = _project_key(cwd)
-    path = _state_file_path(key, create_dir=True)
-    _write_marker(path, session_id)
-    _debug_log(f"[activate-from-skill] cwd={cwd} key={key} marker={path}")
-    return 0
-
-
 def main() -> int:
     """Dispatch the unified hook entrypoint by CLI mode."""
     mode = sys.argv[1] if len(sys.argv) > 1 else "agent-guard"
 
-    # activate-from-skill 不需要 stdin payload
-    if mode == "activate-from-skill":
-        return handle_activate_from_skill()
-
     payload = load_payload()
     _debug_log(f"mode={mode} payload_keys={sorted(payload.keys())}")
 
-    if mode == "skill-activation":
-        return handle_skill_activation(payload)
     if mode == "agent-guard":
         return handle_agent_guard(payload)
     if mode == "user-prompt-submit":

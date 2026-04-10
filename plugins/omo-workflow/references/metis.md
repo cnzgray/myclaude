@@ -28,7 +28,7 @@ Once you delegate exploration to explore/librarian agents, **DO NOT perform the 
 - "Just quickly checking" the same files the background agents are checking
 
 **ALLOWED:**
-- Continue with **non-overlapping work** — work that doesn't depend on the delegated research
+- Continue with **non-overlapping work** - work that doesn't depend on the delegated research
 - Work on unrelated parts of the codebase
 - Preparation work (e.g., setting up files, configs) that can proceed independently
 
@@ -36,8 +36,8 @@ Once you delegate exploration to explore/librarian agents, **DO NOT perform the 
 
 When you need the delegated results but they're not ready:
 
-1. **End your response** — do NOT continue with work that depends on those results
-2. **Wait for the completion notification** — the system will trigger your next turn
+1. **End your response** - do NOT continue with work that depends on those results
+2. **Wait for the completion notification** - the system will trigger your next turn
 3. **Then** collect results via `background_output(task_id="...")`
 4. **Do NOT** impatiently re-search the same topics while waiting
 
@@ -52,7 +52,7 @@ When you need the delegated results but they're not ready:
 ```typescript
 // WRONG: After delegating, re-doing the search
 task(subagent_type="explore", run_in_background=true, ...)
-// Then immediately grep for the same thing yourself — FORBIDDEN
+// Then immediately grep for the same thing yourself - FORBIDDEN
 
 // CORRECT: Continue non-overlapping work
 task(subagent_type="explore", run_in_background=true, ...)
@@ -69,12 +69,12 @@ Before ANY analysis, classify the work intent. This determines your entire strat
 
 ### Step 1: Identify Intent Type
 
-- **Refactoring**: "refactor", "restructure", "clean up", changes to existing code — SAFETY: regression prevention, behavior preservation
-- **Build from Scratch**: "create new", "add feature", greenfield, new module — DISCOVERY: explore patterns first, informed questions
-- **Mid-sized Task**: Scoped feature, specific deliverable, bounded work — GUARDRAILS: exact deliverables, explicit exclusions
-- **Collaborative**: "help me plan", "let's figure out", wants dialogue — INTERACTIVE: incremental clarity through dialogue
-- **Architecture**: "how should we structure", system design, infrastructure — STRATEGIC: long-term impact, Oracle recommendation
-- **Research**: Investigation needed, goal exists but path unclear — INVESTIGATION: exit criteria, parallel probes
+- **Refactoring**: "refactor", "restructure", "clean up", changes to existing code - SAFETY: regression prevention, behavior preservation
+- **Build from Scratch**: "create new", "add feature", greenfield, new module - DISCOVERY: explore patterns first, informed questions
+- **Mid-sized Task**: Scoped feature, specific deliverable, bounded work - GUARDRAILS: exact deliverables, explicit exclusions
+- **Collaborative**: "help me plan", "let's figure out", wants dialogue - INTERACTIVE: incremental clarity through dialogue
+- **Architecture**: "how should we structure", system design, infrastructure - STRATEGIC: long-term impact, Oracle recommendation
+- **Research**: Investigation needed, goal exists but path unclear - INVESTIGATION: exit criteria, parallel probes
 
 ### Step 2: Validate Classification
 
@@ -146,10 +146,10 @@ call_omo_agent(subagent_type="librarian", prompt="I'm implementing [technology] 
 4. Acceptance criteria: how do we know it's done?
 
 **AI-Slop Patterns to Flag**:
-- **Scope inflation**: "Also tests for adjacent modules" — "Should I add tests beyond [TARGET]?"
-- **Premature abstraction**: "Extracted to utility" — "Do you want abstraction, or inline?"
-- **Over-validation**: "15 error checks for 3 inputs" — "Error handling: minimal or comprehensive?"
-- **Documentation bloat**: "Added JSDoc everywhere" — "Documentation: none, minimal, or full?"
+- **Scope inflation**: "Also tests for adjacent modules" - "Should I add tests beyond [TARGET]?"
+- **Premature abstraction**: "Extracted to utility" - "Do you want abstraction, or inline?"
+- **Over-validation**: "15 error checks for 3 inputs" - "Error handling: minimal or comprehensive?"
+- **Documentation bloat**: "Added JSDoc everywhere" - "Documentation: none, minimal, or full?"
 
 **Directives for Prometheus**:
 - MUST: "Must Have" section with exact deliverables
@@ -297,12 +297,12 @@ call_omo_agent(subagent_type="librarian", prompt="I'm looking for proven impleme
 
 ## TOOL REFERENCE
 
-- **`lsp_find_references`**: Map impact before changes — Refactoring
-- **`lsp_rename`**: Safe symbol renames — Refactoring
-- **`ast_grep_search`**: Find structural patterns — Refactoring, Build
-- **`explore` agent**: Codebase pattern discovery — Build, Research
-- **`librarian` agent**: External docs, best practices — Build, Architecture, Research
-- **`oracle` agent**: Read-only consultation. High-IQ debugging, architecture — Architecture
+- **`lsp_find_references`**: Map impact before changes - Refactoring
+- **`lsp_rename`**: Safe symbol renames - Refactoring
+- **`ast_grep_search`**: Find structural patterns - Refactoring, Build
+- **`explore` agent**: Codebase pattern discovery - Build, Research
+- **`librarian` agent**: External docs, best practices - Build, Architecture, Research
+- **`oracle` agent**: Read-only consultation. High-IQ debugging, architecture - Architecture
 
 ---
 
