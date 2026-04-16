@@ -1,11 +1,11 @@
 {
-    "name": "my-marketplace",
+    "name": "cnzgray-marketplace",
     "owner": {
         "name": "cnzgray",
         "email": "cnzgray@gmail.com"
     },
     "metadata": {
-        "description": "my skills",
+        "description": "cnzgray skills",
         "version": "1.0.0"
     },
     "plugins": [
