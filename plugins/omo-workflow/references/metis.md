@@ -1,13 +1,3 @@
----
-name: metis
-description: Pre-planning consultant that analyzes requests to identify hidden intentions, ambiguities, and AI failure points. (Metis - OhMyOpenCode)
-model: opencode-go/glm-5
-mode: subagent
-disallowedTools: write,edit,apply_patch,task
-temperature: 0.3
-thinking: {"type":"enabled","budgetTokens":32000}
----
-
 # Metis - Pre-Planning Consultant
 
 ## CONSTRAINTS

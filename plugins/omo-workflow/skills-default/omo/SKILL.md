@@ -309,7 +309,7 @@ Each category is configured with a model optimized for that domain. Read the des
 - `visual-engineering` - Frontend, UI/UX, design, styling, animation
 - `artistry` - Complex problem-solving with unconventional, creative approaches - beyond standard patterns
 - `ultrabrain` - Use ONLY for genuinely hard, logic-heavy tasks. Give clear goals only, not step-by-step instructions.
-- `deep` - Goal-oriented autonomous problem-solving. Thorough research before action. For hairy problems requiring deep understanding.
+- `deep` - Goal-oriented autonomous problem-solving on hairy problems requiring deep research. ONE goal + ONE deliverable per call — multiple goals must fan out as parallel `deep` calls, never bundled into one.
 - `quick` - Trivial tasks - single file changes, typo fixes, simple modifications
 - `unspecified-low` - Tasks that don't fit other categories, low effort required
 - `unspecified-high` - Tasks that don't fit other categories, high effort required
@@ -317,7 +317,7 @@ Each category is configured with a model optimized for that domain. Read the des
 
 #### Available Skills (via `skill` tool)
 
-**Built-in**: playwright, frontend-ui-ux, git-master, dev-browser, review-work, ai-slop-remover
+**Built-in**: playwright, frontend-ui-ux, git-master, review-work, ai-slop-remover
 
 > Full skill descriptions → use the `skill` tool to check before EVERY delegation.
 
@@ -386,8 +386,8 @@ task(category="quick", load_skills=[], prompt="Redesign the sidebar layout with 
 Multi-step task? **ALWAYS consult Plan Agent first.** Do NOT start implementation without a plan.
 
 - Single-file fix or trivial change → proceed directly
-- Anything else (2+ steps, unclear scope, architecture) → `task(subagent_type="plan", ...)` FIRST
-- Use `session_id` to resume the same Plan Agent - ask follow-up questions aggressively
+- Anything else (2+ steps, unclear scope, architecture) → `task(subagent_type="prometheus", ...)` FIRST
+- Use `task_id` to resume the same Plan Agent - ask follow-up questions aggressively
 - If ANY part of the task is ambiguous, ask Plan Agent before guessing
 
 Plan Agent returns a structured work breakdown with parallel execution opportunities. Follow it.
@@ -453,15 +453,15 @@ AFTER THE WORK YOU DELEGATED SEEMS DONE, ALWAYS VERIFY THE RESULTS AS FOLLOWING:
 
 ### Session Continuity (MANDATORY)
 
-Every `task()` output includes a session_id. **USE IT.**
+Every `task()` output includes a task_id. **USE IT.**
 
 **ALWAYS continue when:**
-- Task failed/incomplete → `session_id="{session_id}", prompt="Fix: {specific error}"`
-- Follow-up question on result → `session_id="{session_id}", prompt="Also: {question}"`
-- Multi-turn with same agent → `session_id="{session_id}"` - NEVER start fresh
-- Verification failed → `session_id="{session_id}", prompt="Failed verification: {error}. Fix."`
+- Task failed/incomplete → `task_id="{task_id}", prompt="Fix: {specific error}"`
+- Follow-up question on result → `task_id="{task_id}", prompt="Also: {question}"`
+- Multi-turn with same agent → `task_id="{task_id}"` - NEVER start fresh
+- Verification failed → `task_id="{task_id}", prompt="Failed verification: {error}. Fix."`
 
-**Why session_id is CRITICAL:**
+**Why task_id is CRITICAL:**
 - Subagent has FULL conversation context preserved
 - No repeated file reads, exploration, or setup
 - Saves 70%+ tokens on follow-ups
@@ -472,10 +472,10 @@ Every `task()` output includes a session_id. **USE IT.**
 task(category="quick", load_skills=[], run_in_background=false, description="Fix type error", prompt="Fix the type error in auth.ts...")
 
 // CORRECT: Resume preserves everything
-task(session_id="ses_abc123", load_skills=[], run_in_background=false, description="Fix type error", prompt="Fix: Type error on line 42")
+task(task_id="ses_abc123", load_skills=[], run_in_background=false, description="Fix type error", prompt="Fix: Type error on line 42")
 ```
 
-**After EVERY delegation, STORE the session_id for potential continuation.**
+**After EVERY delegation, STORE the task_id for potential continuation.**
 
 ### Code Changes:
 - Match existing patterns (if codebase is disciplined)

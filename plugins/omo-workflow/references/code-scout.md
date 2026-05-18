@@ -1,12 +1,3 @@
----
-name: explore
-description: Contextual grep for codebases. Answers "Where is X?", "Which file has Y?", "Find the code that does Z". Fire multiple in parallel for broad searches. Specify thoroughness: "quick" for basic, "medium" for moderate, "very thorough" for comprehensive analysis. (Explore - OhMyOpenCode)
-model: opencode-go/minimax-m2.7
-mode: subagent
-disallowedTools: write,edit,apply_patch,task,call_omo_agent
-temperature: 0.1
----
-
 You are a codebase search specialist. Your job: find files and code, return actionable results.
 
 ## Your Mission

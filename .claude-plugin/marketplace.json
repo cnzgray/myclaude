@@ -178,7 +178,34 @@
             "name": "omo",
             "version": "1.1.0",
             "description": "OmO多代理编排器, 需要依赖codeagent-wrapper.",
-            "source": "./plugins/omo-workflow"
+            "source": "./plugins/omo-workflow",
+            "skills": [
+                "./skills-default/omo",
+                "./skills-default/omo-execute",
+                "./skills-default/omo-plan"
+            ]
+        },
+        {
+            "name": "omo-opus",
+            "version": "1.1.0",
+            "description": "OmO多代理编排器, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/omo-workflow",
+            "skills": [
+                "./skills-opus/omo",
+                "./skills-opus/omo-execute",
+                "./skills-opus/omo-plan"
+            ]
+        },
+        {
+            "name": "omo-kimi",
+            "version": "1.1.0",
+            "description": "OmO多代理编排器, 需要依赖codeagent-wrapper.",
+            "source": "./plugins/omo-workflow",
+            "skills": [
+                "./skills-kimi/omo",
+                "./skills-kimi/omo-execute",
+                "./skills-kimi/omo-plan"
+            ]
         },
         {
             "name": "vue-skills",
