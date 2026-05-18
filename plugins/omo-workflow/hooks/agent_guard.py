@@ -156,13 +156,15 @@ def is_active(payload: dict) -> bool:
 
 
 def should_activate_from_prompt(payload: dict) -> bool:
-    """检测用户 prompt 是否调用了 omo skill。
+    """检测用户 prompt 是否调用了 omo skill（含所有变体）。
 
-    匹配规则: prompt 以 /omo 开头（含 /omo, /omo:omo, /omo:omo-plan 等）。
+    匹配规则: prompt 以 /omo 开头，可选带 -variant 后缀（如 -opus, -kimi），
+    后接 :、空白或字符串结尾。
+    匹配: /omo, /omo:omo, /omo-opus:omo, /omo-kimi:omo-plan 等。
     不匹配 /omox, /omosphere 等非 omo 前缀。
     """
     prompt = payload.get("prompt", "").strip()
-    return bool(re.match(r"^/omo(?::|[\s]|$)", prompt))
+    return bool(re.match(r"^/omo(?:-[\w]+)?(?::|[\s]|$)", prompt))
 
 
 def cleanup_expired() -> int:
