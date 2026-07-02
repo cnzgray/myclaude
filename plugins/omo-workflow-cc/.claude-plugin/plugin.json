@@ -1,0 +1,9 @@
+{
+  "name": "omo-cc",
+  "version": "1.0.0",
+  "description": "OmO 多代理编排器（纯 Claude Code 原生 subagent 版，无需 codeagent-wrapper）。",
+  "author": {
+    "name": "cnzgray",
+    "email": "cnzgray@gmail.com"
+  }
+}
