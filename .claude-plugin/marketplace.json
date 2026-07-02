@@ -11,11 +11,8 @@
     "plugins": [
         {
             "name": "zcf",
-            "version": "3.5.1",
             "source": "./plugins/zcf",
-            "description": "ZCF的一些命令合集",
-            "strict": false,
-            "outputStyles": "./output-styles"
+            "description": "ZCF的一些命令合集"
         },
         {
             "name": "cexll",
@@ -206,6 +203,11 @@
                 "./skills-kimi/omo-execute",
                 "./skills-kimi/omo-plan"
             ]
+        },
+        {
+            "name": "omo-cc",
+            "description": "OmO多代理编排器 (纯 Claude Code 原生 subagent 版，无需 codeagent-wrapper)。",
+            "source": "./plugins/omo-workflow-cc"
         },
         {
             "name": "vue-skills",

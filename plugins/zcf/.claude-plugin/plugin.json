@@ -1,0 +1,6 @@
+{
+  "name": "zcf",
+  "version": "3.5.1",
+  "description": "ZCF的一些命令合集",
+  "outputStyles": "./output-styles"
+}
