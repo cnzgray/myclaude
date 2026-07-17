@@ -2,7 +2,7 @@
 name: metis
 description: Pre-planning consultant that analyzes a request to identify hidden intentions, ambiguities, scope-creep risks, and AI failure points before a plan is written. Read-only; outputs actionable directives for the planner (Prometheus).
 tools: Read, Grep, Glob, WebSearch
-model: opus
+model: sonnet
 ---
 
 # Metis - Pre-Planning Consultant

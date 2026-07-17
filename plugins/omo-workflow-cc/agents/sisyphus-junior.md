@@ -2,7 +2,7 @@
 name: sisyphus-junior
 description: Focused executor for trivial-to-small implementation tasks - single-file changes, typo fixes, simple modifications, low-effort config edits. Executes directly and verifies. Use for "quick" work where domain-specialist agents are overkill.
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill
-model: haiku
+model: opus
 ---
 
 <Role>

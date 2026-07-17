@@ -78,14 +78,47 @@ omo-workflow-cc/
 |----------|------|:---:|:---:|:---:|:---:|
 | `code-scout` | 代码探索 | FREE / haiku | ✅ | ✅ | ✅ |
 | `librarian` | 外部文档 | CHEAP / haiku | ✅ | ✅ | ✅ |
-| `oracle` | 架构咨询 | EXPENSIVE / opus | ✅ | ✅ | ✅(F1) |
-| `metis` | 预规划分析 | EXPENSIVE / opus | ❌ | ✅ | ❌ |
-| `momus` | 计划验证 | EXPENSIVE / opus | ✅ | ✅ | ✅ |
+| `oracle` | 架构咨询 | fable | ✅ | ✅ | ✅(F1) |
+| `metis` | 预规划分析 | sonnet | ❌ | ✅ | ❌ |
+| `momus` | 计划验证 | fable | ✅ | ✅ | ✅ |
 | `hephaestus` | 深度实现 | opus | ✅ | ❌ | ✅ |
 | `frontend-ui-ux-engineer` | UI 实现 | sonnet | ✅ | ❌ | ✅ |
 | `document-writer` | 文档编写 | sonnet | ✅ | ❌ | ✅ |
-| `sisyphus-junior` | 快速执行 | haiku | ✅ | ❌ | ✅ |
+| `sisyphus-junior` | 快速执行 | opus | ✅ | ❌ | ✅ |
 | `multimodal-looker` | 媒体解读 | sonnet | ✅ | ❌ | ✅ |
+
+## 模型档位映射（env 别名）
+
+agent 文件**不写模型名**，全部使用 Claude Code 档位别名（`fable`/`opus`/`sonnet`/`haiku`），通过环境变量把别名映射到真实模型。切换模型只改 env，agent 定义不动。
+
+| 档位别名 | 映射模型 | 用途 | subagent |
+|---------|---------|------|----------|
+| `fable` | kimi k3 | 主编排（主会话）+ 咨询决策 | 主会话 / oracle / momus |
+| `sonnet` | kimi k3 | 辅助实现 + 写作 + 媒体 | frontend-ui-ux-engineer / metis / document-writer / multimodal-looker |
+| `opus` | glm-5.2 | 代码实现核心 | hephaestus / sisyphus-junior |
+| `haiku` | 便宜模型 | 高频只读探索 | code-scout / librarian |
+
+`fable` 与 `sonnet` 都映射 kimi k3：主会话无论选哪个档位都恒为 kimi k3；`opus` 独占 glm-5.2，实现类 subagent 不与编排撞模型。
+
+### 配置 env（安装步骤）
+
+插件无法自带 env（Claude Code 插件 `settings.json` 仅支持 `agent`/`subagentStatusLine` 键），请把以下加入 `~/.claude/settings.json` 的 `env` 块：
+
+```json
+{
+  "env": {
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "k3[1M]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "k3[1M]",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.2[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "MiniMax-M3[1M]"
+  },
+  "model": "fable"
+}
+```
+
+- `"model": "fable"` 锁定主会话档位，确保主编排恒为 kimi k3；勿切到 `opus`，否则主会话变 glm-5.2。
+- `[1m]`/`[1M]` 是 1M 上下文窗口后缀，Claude Code 剥离后发给网关。官方仅记录小写 `[1m]`，大写按网关实际认的来。
+- 模型 ID（`k3`/`glm-5.2`/`MiniMax-M3`）替换为你网关的实际 ID。
 
 ## category → subagent 映射
 
