@@ -1,7 +1,7 @@
 ---
 description: Analyze changes with Git only and auto-generate conventional commit messages with optional emoji; suggests splitting commits when needed, runs local Git hooks by default (use --no-verify to skip)
-allowed-tools: Read(**), Exec(git status, git diff, git add, git restore --staged, git commit, git rev-parse, git config), AskUserQuestion
-argument-hint: [--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]
+allowed-tools: Read(**), Bash(git status *), Bash(git diff *), Bash(git log *), Bash(git add *), Bash(git restore --staged *), Bash(git commit *), Bash(git rev-parse *), Bash(git config *), AskUserQuestion
+argument-hint: "[--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]"
 # examples:
 #   - /git-commit                           # Analyze current changes, generate commit message
 #   - /git-commit --all                     # Stage all changes and commit
@@ -43,8 +43,6 @@ This command works **without any package manager/build tools**, using only **Git
 - `--scope <scope>`: Specify commit scope (e.g., `ui`, `docs`, `api`), written to message header.
 - `--type <type>`: Force commit type (e.g., `feat`, `fix`, `docs`), overrides automatic detection.
 
-> Note: If the framework doesn't support interactive confirmation, enable `confirm: true` in front-matter to avoid mistakes.
-
 ---
 
 ## What This Command Does
@@ -61,12 +59,14 @@ This command works **without any package manager/build tools**, using only **Git
 
 3. **Split Suggestions (Split Heuristics)**
    - Cluster by **concerns**, **file modes**, **change types** (e.g., source code vs docs/tests; different directories/packages; additions vs deletions).
+   - **Don't mix `feat`/`fix`/`refactor` in the same commit**; keep each commit independently revertable.
    - If **multiple independent changesets** or large diff detected (e.g., > 300 lines / across multiple top-level directories), suggest splitting commits with pathspecs for each group (for subsequent `git add <paths>`).
 
 4. **Commit Message Generation (Conventional with Optional Emoji)**
    - Auto-infer `type` (`feat`/`fix`/`docs`/`refactor`/`test`/`chore`/`perf`/`style`/`ci`/`revert`...) and optional `scope`.
    - Generate message header: `[<emoji>] <type>(<scope>)?: <subject>` (first line ≤ 72 chars, imperative mood, emoji included only with `--emoji` flag).
-   - Generate message body: bullet points (motivation, implementation details, impact scope, BREAKING CHANGE if any).
+   - **Subject language**: Detect the language of the repo's recent commit history with `git log -n 20 --pretty=%s`, and write `<subject>` in the dominant language of existing commits — Chinese history → Chinese subject (e.g., "添加... / 修复..."), English history → English subject (e.g., "add... / fix..."). Default to English when history is empty or mixed/ambiguous. Type/scope stay in English per Conventional Commits.
+   - Generate message body: bullet points (motivation, implementation details, impact scope, risks, BREAKING CHANGE if any).
 
 5. **Execute Commit**
    - Single commit scenario: `git commit [-S] [--no-verify] [-s] -F - <<'EOF'` with the generated message via HEREDOC.
@@ -79,18 +79,14 @@ This command works **without any package manager/build tools**, using only **Git
 
 ## Best Practices for Commits
 
-- **Atomic commits**: One commit does one thing, easier to trace and review.
-- **Group before committing**: Split by directory/module/feature.
-- **Clear subject**: First line ≤ 72 chars, imperative mood (e.g., "add... / fix...").
-- **Body with context**: Explain motivation, solution, impact scope, risks, and next steps.
-- **Follow Conventional Commits**: `<type>(<scope>): <subject>`.
+- **Clear subject**: First line ≤ 72 chars, imperative mood (e.g., "add... / fix..." / "添加... / 修复..."), language follows the repo's existing commit history.
 
 ---
 
 ## Type to Emoji Mapping (When --emoji is Used)
 
 - ✨ `feat`: New feature
-- 🐛 `fix`: Bug fix (includes 🔥 remove code/files, 🚑️ hotfix, 👽️ adapt to external API changes, 🔒️ security fix, 🚨 fix warnings, 💚 fix CI)
+- 🐛 `fix`: Bug fix
 - 📝 `docs`: Documentation and comments
 - 🎨 `style`: Code style/formatting (no semantic changes)
 - ♻️ `refactor`: Refactoring (no new features, no bug fixes)
@@ -99,26 +95,15 @@ This command works **without any package manager/build tools**, using only **Git
 - 🔧 `chore`: Build/tools/misc tasks (merge branches, update configs, release tags, pin dependencies, .gitignore, etc.)
 - 👷 `ci`: CI/CD configuration and scripts
 - ⏪️ `revert`: Revert commits
-- 💥 `feat`: Breaking changes (explained in `BREAKING CHANGE:` section)
+- Breaking changes: use `feat!:` (or `fix!:` etc.) and add a `BREAKING CHANGE:` paragraph in the body — no special emoji.
 
 > If `--type`/`--scope` is passed, it will **override** auto-detection.
-> Emoji is only included when `--emoji` flag is specified.
-
----
-
-## Guidelines for Splitting Commits
-
-1. **Different concerns**: Unrelated feature/module changes should be split.
-2. **Different types**: Don't mix `feat`, `fix`, `refactor` in the same commit.
-3. **File modes**: Source code vs docs/tests/configs should be grouped separately.
-4. **Size threshold**: Large diffs (e.g., >300 lines or across multiple top-level directories) should be split.
-5. **Revertability**: Ensure each commit can be independently reverted.
 
 ---
 
 ## Examples
 
-**Good (with --emoji)**
+**Good (--emoji on; without the flag, drop the emoji prefix)**
 
 - ✨ feat(ui): add user authentication flow
 - 🐛 fix(api): handle token refresh race condition
@@ -128,15 +113,14 @@ This command works **without any package manager/build tools**, using only **Git
 - 🔧 chore: update git hooks and repository settings
 - ⏪️ revert: revert "feat(core): introduce streaming API"
 
-**Good (without --emoji)**
+**Example when repo history is Chinese**
 
-- feat(ui): add user authentication flow
-- fix(api): handle token refresh race condition
-- docs: update API usage examples
-- refactor(core): extract retry logic into helper
-- test: add unit tests for rate limiter
-- chore: update git hooks and repository settings
-- revert: revert "feat(core): introduce streaming API"
+- ✨ feat(ui): 添加用户登录流程
+- 🐛 fix(api): 处理 token 刷新竞态条件
+- 📝 docs: 更新 API 使用示例
+- ♻️ refactor(core): 抽取重试逻辑为辅助函数
+- ✅ test: 为限流器添加单元测试
+- 🔧 chore: 更新 git hooks 和仓库配置
 
 **Split Example**
 
@@ -149,8 +133,5 @@ This command works **without any package manager/build tools**, using only **Git
 
 ## Important Notes
 
-- **Git only**: No package manager/build commands (`pnpm`/`npm`/`yarn` etc.).
-- **Respects hooks**: Executes local Git hooks by default; use `--no-verify` to skip.
-- **No source code changes**: Command only reads staging area and passes commit message via HEREDOC; doesn't directly edit working directory files.
-- **Safety prompts**: In rebase/merge conflicts, detached HEAD states, prompts to handle/confirm before continuing.
-- **Auditable and controllable**: If `confirm: true` is enabled, each actual `git add`/`git commit` step requires confirmation.
+- **No source code changes**: Reads only the staging area and commits via HEREDOC; never edits working-directory files.
+- **Safety prompts**: In rebase/merge conflict or detached HEAD states, prompt to handle/confirm before continuing.

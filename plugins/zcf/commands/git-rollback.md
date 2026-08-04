@@ -1,7 +1,7 @@
 ---
 description: Interactively rollback Git branch to historical version; lists branches, versions, then executes reset/revert after confirmation
-allowed-tools: Read(**), Exec(git fetch, git branch, git tag, git log, git reflog, git checkout, git reset, git revert, git switch), Write()
-argument-hint: [--branch <branch>] [--target <rev>] [--mode reset|revert] [--depth <n>] [--dry-run] [--yes]
+allowed-tools: Read(**), Bash(git fetch *), Bash(git branch *), Bash(git tag *), Bash(git log *), Bash(git reflog *), Bash(git checkout *), Bash(git reset *), Bash(git revert *), Bash(git switch *), Write(**)
+argument-hint: "[--branch <branch>] [--target <rev>] [--mode reset|revert] [--depth <n>] [--dry-run] [--yes]"
 # examples:
 #   - /git-rollback                # Full interactive mode, dry-run
 #   - /git-rollback --branch dev   # Select dev directly, other interactive

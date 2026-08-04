@@ -1,7 +1,7 @@
 ---
 description: Safely find and clean up merged or stale Git branches with dry-run mode and custom base/protected branches support
-allowed-tools: Read(**), Exec(git fetch, git config, git branch, git remote, git push, git for-each-ref, git log), Write()
-argument-hint: [--base <branch>] [--stale <days>] [--remote] [--force] [--dry-run] [--yes]
+allowed-tools: Read(**), Bash(git fetch *), Bash(git config *), Bash(git branch *), Bash(git remote *), Bash(git push *), Bash(git for-each-ref *), Bash(git log *), Write(**)
+argument-hint: "[--base <branch>] [--stale <days>] [--remote] [--force] [--dry-run] [--yes]"
 # examples:
 #   - /git-cleanBranches --dry-run
 #   - /git-cleanBranches --base release/v2.1 --stale 90
