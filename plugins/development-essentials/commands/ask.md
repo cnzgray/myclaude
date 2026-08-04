@@ -1,3 +1,9 @@
+---
+description: Architecture consultation and technical decision guidance from a senior systems architect with four specialist advisors, following KISS/YAGNI/SOLID principles. No code generation.
+argument-hint: "<TECHNICAL_QUESTION>"
+allowed-tools: Read
+---
+
 ## Usage
 `project:/ask <TECHNICAL_QUESTION>`
 

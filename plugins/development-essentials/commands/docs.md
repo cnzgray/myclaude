@@ -1,3 +1,9 @@
+---
+description: Generate structured, comprehensive, and maintainable documentation for specified code scope, including API and developer documentation.
+argument-hint: "<CODE_SCOPE_DESCRIPTION>"
+allowed-tools: Task Read Glob Grep Write Edit
+---
+
 ## Usage
 
 `/project:docs <CODE_SCOPE_DESCRIPTION>`

@@ -1,3 +1,9 @@
+---
+description: Improve code structure and maintainability through refactoring coordinated by four specialists, preserving behavior and existing test coverage.
+argument-hint: "<REFACTOR_SCOPE>"
+allowed-tools: Task Read Glob Grep Edit Write Bash
+---
+
 ## Usage
 `/project:refactor.md <REFACTOR_SCOPE>`
 

@@ -1,3 +1,9 @@
+---
+description: Identify and optimize performance bottlenecks with four optimization specialists, establishing baselines, improving algorithm complexity, and designing scaling strategies.
+argument-hint: "<PERFORMANCE_TARGET>"
+allowed-tools: Task Read Glob Grep Bash
+---
+
 ## Usage
 `/project:optimize <PERFORMANCE_TARGET>`
 

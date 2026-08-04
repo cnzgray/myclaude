@@ -1,3 +1,9 @@
+---
+description: Comprehensive code review with four specialists covering readability, security, performance, and architecture, with prioritized improvement suggestions.
+argument-hint: "<CODE_SCOPE>"
+allowed-tools: Task Read Glob Grep
+---
+
 ## Usage
 `/project:review.md <CODE_SCOPE>`
 

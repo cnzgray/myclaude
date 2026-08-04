@@ -1,3 +1,9 @@
+---
+description: Deep analysis of complex problems using a systematic thinking framework with multi-angle problem examination.
+argument-hint: "<TASK_DESCRIPTION>"
+allowed-tools: Read
+---
+
 ## Usage
 
 `/project:think <TASK_DESCRIPTION>`

@@ -1,3 +1,9 @@
+---
+description: Quickly locate and fix bugs through a quality-gated subagent workflow that analyzes error context and validates fixes without introducing new issues.
+argument-hint: "<ERROR_DESCRIPTION>"
+allowed-tools: Task Read Glob Grep Edit Write Bash
+---
+
 ## Usage
 `/project:bugfix <ERROR_DESCRIPTION>`
 

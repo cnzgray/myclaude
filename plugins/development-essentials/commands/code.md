@@ -1,3 +1,9 @@
+---
+description: Direct feature implementation orchestrated by a development coordinator leading architect, implementation engineer, integration specialist, and code reviewer, with progressive development and quality validation.
+argument-hint: "<FEATURE_DESCRIPTION>"
+allowed-tools: Task Read Glob Grep Edit Write Bash
+---
+
 ## Usage
 `/project:code  <FEATURE_DESCRIPTION>`
 

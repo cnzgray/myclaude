@@ -1,3 +1,9 @@
+---
+description: Design and implement comprehensive test strategies with four testing specialists, including test pyramid planning, coverage analysis, and CI/CD integration.
+argument-hint: "<COMPONENT_OR_FEATURE>"
+allowed-tools: Task Read Glob Grep Write Edit Bash
+---
+
 ## Usage
 `/project:test <COMPONENT_OR_FEATURE>`
 

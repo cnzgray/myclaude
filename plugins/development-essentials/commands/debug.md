@@ -1,3 +1,9 @@
+---
+description: Systematic debugging of complex problems using the UltraThink method with multi-agent coordination, hypothesis reduction, and evidence-driven root cause analysis.
+argument-hint: "<TASK_DESCRIPTION>"
+allowed-tools: Task Read Glob Grep Bash
+---
+
 # UltraThink Debug Orchestrator
 
 ## Usage
