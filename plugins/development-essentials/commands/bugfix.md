@@ -1,5 +1,6 @@
 ---
-description: Quickly locate and fix bugs through a quality-gated subagent workflow that analyzes error context and validates fixes without introducing new issues.
+description: 通过质量门控的子代理工作流快速定位并修复 Bug,分析错误上下文并验证修复质量,避免引入新问题。
+disable-model-invocation: true
 argument-hint: "<ERROR_DESCRIPTION>"
 allowed-tools: Task Read Glob Grep Edit Write Bash
 ---

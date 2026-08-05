@@ -1,5 +1,6 @@
 ---
-description: Rewrite and enhance user instructions to be clearer, more specific, and less ambiguous, preserving code blocks and special formatting.
+description: 重写并增强用户指令,使其更清晰、具体、无歧义,并保留代码块等特殊格式。
+disable-model-invocation: true
 argument-hint: "<task info>"
 ---
 

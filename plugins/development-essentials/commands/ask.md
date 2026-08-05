@@ -1,5 +1,6 @@
 ---
-description: Architecture consultation and technical decision guidance from a senior systems architect with four specialist advisors, following KISS/YAGNI/SOLID principles. No code generation.
+description: 架构咨询与技术决策指导,由资深系统架构师协同四位专家顾问给出建议,遵循 KISS/YAGNI/SOLID 原则,不生成代码。
+disable-model-invocation: true
 argument-hint: "<TECHNICAL_QUESTION>"
 allowed-tools: Read
 ---

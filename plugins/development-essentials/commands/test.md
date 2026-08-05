@@ -1,5 +1,6 @@
 ---
-description: Design and implement comprehensive test strategies with four testing specialists, including test pyramid planning, coverage analysis, and CI/CD integration.
+description: 四位测试专家协同设计并实施完整测试策略,包含测试金字塔规划、覆盖率分析与 CI/CD 集成。
+disable-model-invocation: true
 argument-hint: "<COMPONENT_OR_FEATURE>"
 allowed-tools: Task Read Glob Grep Write Edit Bash
 ---

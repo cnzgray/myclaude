@@ -1,5 +1,6 @@
 ---
-description: Direct feature implementation orchestrated by a development coordinator leading architect, implementation engineer, integration specialist, and code reviewer, with progressive development and quality validation.
+description: 由开发协调者主导的功能实现,协同架构师、实现工程师、集成专家与代码审查员,渐进式开发并做质量验证。
+disable-model-invocation: true
 argument-hint: "<FEATURE_DESCRIPTION>"
 allowed-tools: Task Read Glob Grep Edit Write Bash
 ---

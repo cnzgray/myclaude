@@ -1,5 +1,6 @@
 ---
-description: Improve code structure and maintainability through refactoring coordinated by four specialists, preserving behavior and existing test coverage.
+description: 由四位专家协同重构,改善代码结构与可维护性,保持行为与现有测试覆盖不变。
+disable-model-invocation: true
 argument-hint: "<REFACTOR_SCOPE>"
 allowed-tools: Task Read Glob Grep Edit Write Bash
 ---

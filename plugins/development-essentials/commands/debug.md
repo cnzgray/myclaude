@@ -1,5 +1,6 @@
 ---
-description: Systematic debugging of complex problems using the UltraThink method with multi-agent coordination, hypothesis reduction, and evidence-driven root cause analysis.
+description: 使用 UltraThink 方法系统性调试复杂问题,多代理协同、假设收敛与证据驱动的根因分析。
+disable-model-invocation: true
 argument-hint: "<TASK_DESCRIPTION>"
 allowed-tools: Task Read Glob Grep Bash
 ---

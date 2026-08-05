@@ -1,5 +1,6 @@
 ---
-description: Comprehensive code review with four specialists covering readability, security, performance, and architecture, with prioritized improvement suggestions.
+description: 四位专家全方位代码审查,覆盖可读性、安全性、性能与架构,输出分级改进建议。
+disable-model-invocation: true
 argument-hint: "<CODE_SCOPE>"
 allowed-tools: Task Read Glob Grep
 ---

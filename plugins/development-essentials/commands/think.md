@@ -1,5 +1,6 @@
 ---
-description: Deep analysis of complex problems using a systematic thinking framework with multi-angle problem examination.
+description: 使用系统化思考框架对复杂问题进行深度分析,多角度审视问题并输出可行方案。
+disable-model-invocation: true
 argument-hint: "<TASK_DESCRIPTION>"
 allowed-tools: Read
 ---

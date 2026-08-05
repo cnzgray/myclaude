@@ -1,5 +1,6 @@
 ---
-description: Generate structured, comprehensive, and maintainable documentation for specified code scope, including API and developer documentation.
+description: 为指定代码范围生成结构化、全面且易于维护的文档,涵盖 API 文档与开发者文档。
+disable-model-invocation: true
 argument-hint: "<CODE_SCOPE_DESCRIPTION>"
 allowed-tools: Task Read Glob Grep Write Edit
 ---
