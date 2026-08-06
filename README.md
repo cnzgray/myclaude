@@ -93,7 +93,7 @@
 - **cexll** `v6.3.4` - All in One，集成所有开发命令、agents 和 skills
   - 依赖：需从 [cexll/myclaude releases](https://github.com/cexll/myclaude/releases) 安装 `codeagent-wrapper` 到 `~/.claude/bin/`
   - 推荐：配合原生 [Codex](https://github.com/openai/codex) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli) 使用效果更佳
-- **zcf** `v3.5.1` - Git 实用工具（commit、worktree、分支清理、rollback）
+- **zcf** `v3.5.2` - Git 实用工具（commit、worktree、分支清理、rollback）
 
 ### 独立插件
 

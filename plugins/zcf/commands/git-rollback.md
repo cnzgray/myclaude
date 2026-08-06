@@ -1,90 +1,38 @@
 ---
-description: Interactively rollback Git branch to historical version; lists branches, versions, then executes reset/revert after confirmation
-allowed-tools: Read(**), Bash(git fetch *), Bash(git branch *), Bash(git tag *), Bash(git log *), Bash(git reflog *), Bash(git checkout *), Bash(git reset *), Bash(git revert *), Bash(git switch *), Write(**)
+description: Preview or execute a guarded rollback of a local Git branch with reset or revert
 argument-hint: "[--branch <branch>] [--target <rev>] [--mode reset|revert] [--depth <n>] [--dry-run] [--yes]"
-# examples:
-#   - /git-rollback                # Full interactive mode, dry-run
-#   - /git-rollback --branch dev   # Select dev directly, other interactive
-#   - /git-rollback --branch dev --target v1.2.0 --mode reset --yes
+disable-model-invocation: true
+allowed-tools: Bash(git branch *), Bash(git tag *), Bash(git log *), Bash(git reflog *), Bash(git status *), Bash(git rev-parse *), Bash(git show-ref *), Bash(git merge-base *), Bash(git worktree *), Bash(git switch *), Bash(git reset *), Bash(git revert *), AskUserQuestion
 ---
 
-# Claude Command: Git Rollback
+# Git Rollback
 
-**Purpose**: Safely and visually rollback a specified branch to an older version.
-Defaults to **read-only preview (`--dry-run`)**; actual execution requires `--yes` or interactive confirmation.
+Preview by default. Execute only when `--yes` is present; `--dry-run` always wins and never mutates history or the working tree.
 
----
+## Resolve the Plan
 
-## Usage
+1. Verify a Git worktree and require a completely clean tracked/untracked state before either mode.
+2. Accept only an existing local branch. Do not treat `origin/<name>` or another remote-tracking ref as a local branch.
+3. Refuse a branch checked out in another worktree. Switch to the selected local branch only after all checks pass.
+4. Resolve `--target` to a commit and require it to be an ancestor of the selected branch. If arguments are omitted, list up to `--depth` recent commits/tags/reflog entries and ask the user to choose.
+5. Require an explicit mode:
+   - `reset`: move the branch to the target and discard later commits from that branch history;
+   - `revert`: create reverse commits for `<target>..HEAD`, preserving history and the target itself.
+6. Show branch, current HEAD, resolved target, commits affected, exact commands, and push implications.
 
-```bash
-# Pure interactive: list branches → select branch → list recent 20 versions → select target → choose reset or revert → confirm
-/git-rollback
+Without `--yes`, stop after this preview. Never infer execution from a conversational response after a dry run; require a new invocation with `--yes`.
 
-# Specify branch, other interactive
-/git-rollback --branch feature/calculator
+## Execution Guards
 
-# Specify branch and target commit, execute with hard-reset in one go (dangerous)
-/git-rollback --branch main --target 1a2b3c4d --mode reset --yes
+- `reset` on `main`, `master`, `production`, or a `release/*` branch requires a typed confirmation naming the full branch even with `--yes`. Abort on mismatch.
+- Before reset, create `backup/rollback-<original-short-sha>` at the original HEAD and verify the backup ref exists. This protects commits, not uncommitted files; the clean-worktree guard remains mandatory.
+- Before revert, detect merge commits in `<target>..HEAD`. Stop and request an explicit mainline strategy instead of guessing.
 
-# Generate revert commit only (non-destructive rollback), preview
-/git-rollback --branch release/v2.1 --target v2.0.5 --mode revert --dry-run
-```
+## Execute
 
-### Options
+- Reset: `git reset --hard <resolved-target>` only after the backup and all confirmations succeed.
+- Revert: `git revert --no-edit <resolved-target>..HEAD`. If any revert fails, run `git revert --abort`, verify the branch state, and report the conflict; do not leave a partial sequence.
+- Verify final HEAD, status, and affected log range.
+- Never push automatically. For reset, suggest `git push --force-with-lease` only after the user reviews the local result; for revert, suggest a normal push.
 
-| Option                 | Description                                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `--branch <branch>`    | Branch to rollback; interactively selected if omitted.                                                             |
-| `--target <rev>`       | Target version (commit hash, tag, or reflog reference); interactively selects recent `--depth` entries if omitted. |
-| `--mode reset\|revert` | `reset`: Hard rollback history; `revert`: Generate reverse commits keeping history intact. Prompts by default.     |
-| `--depth <n>`          | List recent n versions in interactive mode (default 20).                                                           |
-| `--dry-run`            | **Enabled by default**, only preview commands to be executed.                                                      |
-| `--yes`                | Skip all confirmations and execute directly, suitable for CI/CD scripts.                                           |
-
----
-
-## Interactive Flow
-
-1. **Sync remote** → `git fetch --all --prune`
-2. **List branches** → `git branch -a` (local + remote, filter protected branches)
-3. **Select branch** → User input or parameter
-4. **List versions** → `git log --oneline -n <depth>` + `git tag --merged` + `git reflog -n <depth>`
-5. **Select target** → User inputs commit hash / tag
-6. **Select mode** → `reset` or `revert`
-7. **Final confirmation** (unless `--yes`)
-8. **Execute rollback**
-   - `reset`: `git switch <branch> && git reset --hard <target>`
-   - `revert`: `git switch <branch> && git revert --no-edit <target>..HEAD`
-9. **Push suggestion** → Prompt whether to `git push --force-with-lease` (reset) or regular `git push` (revert)
-
----
-
-## Safety Guards
-
-- **Backup**: Automatically records current HEAD in reflog before execution, recoverable with `git switch -c backup/<timestamp>`.
-- **Protected branches**: If protected branches like `main` / `master` / `production` are detected with `reset` mode enabled, requires additional confirmation.
-- **--dry-run enabled by default**: Prevents accidental operations.
-- **--force prohibited**: No `--force` provided; if force push needed, manually enter `git push --force-with-lease`.
-
----
-
-## Use Case Examples
-
-| Scenario                                                                    | Command Example                                                  |
-| --------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Hotfix patch deployed with bug, need to rollback to tag `v1.2.0`            | `/git-rollback --branch release/v1 --target v1.2.0 --mode reset` |
-| Ops colleague pushed debug logs by mistake, need to generate reverse commit | `/git-rollback --branch main --target 3f2e7c9 --mode revert`     |
-| Research historical bugs, guide newcomers through branch history            | `/git-rollback` (full interactive, dry-run)                      |
-
----
-
-## Notes
-
-1. **reset vs revert**
-   - **reset** changes history, requires force push and may affect other collaborators, use with caution.
-   - **revert** is safer, generates new commits preserving history, but adds one more record.
-2. **Embedded repositories** often have large binary files; ensure LFS/submodule state consistency before rollback.
-3. If repository has CI forced validation, rollback may trigger pipelines automatically; confirm control policies to avoid accidental deployment of old versions.
-
----
+Report the backup ref, resulting HEAD, created revert commits, or the exact reason execution stopped.
