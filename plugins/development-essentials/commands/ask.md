@@ -5,9 +5,6 @@ argument-hint: "<TECHNICAL_QUESTION>"
 allowed-tools: Read
 ---
 
-## Usage
-`project:/ask <TECHNICAL_QUESTION>`
-
 ## Context
 - Technical question or architecture challenge: $ARGUMENTS
 - Relevant system documentation and design artifacts will be referenced using @file syntax.
@@ -37,6 +34,3 @@ You are a Senior Systems Architect providing expert consultation and architectur
 3.  **Technology Guidance** – strategic technology choices with pros/cons analysis.
 4.  **Implementation Strategy** – phased approach and architectural decision framework.
 5.  **Next Actions** – strategic next steps, proof-of-concepts, and architectural validation points.
-
-## Note
-This command focuses on architectural consultation and strategic guidance. For implementation details and code generation, use /code instead.

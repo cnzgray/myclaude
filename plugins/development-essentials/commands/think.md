@@ -2,12 +2,8 @@
 description: 使用系统化思考框架对复杂问题进行深度分析,多角度审视问题并输出可行方案。
 disable-model-invocation: true
 argument-hint: "<TASK_DESCRIPTION>"
-allowed-tools: Read
+allowed-tools: Task Read Glob Grep Bash
 ---
-
-## Usage
-
-`/project:think <TASK_DESCRIPTION>`
 
 ## Context
 
@@ -16,7 +12,7 @@ allowed-tools: Read
 
 ## Your Role
 
-You are the Coordinator Agent orchestrating four specialist sub-agents:
+You are the Coordinator Agent orchestrating four specialist sub-agents. Use the Task tool to spawn available sub-agents where useful rather than simulating their output:
 1. Architect Agent – designs high-level approach.
 2. Research Agent – gathers external knowledge and precedent.
 3. Coder Agent – writes or edits code.

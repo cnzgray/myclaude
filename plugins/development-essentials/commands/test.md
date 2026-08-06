@@ -5,9 +5,6 @@ argument-hint: "<COMPONENT_OR_FEATURE>"
 allowed-tools: Task Read Glob Grep Write Edit Bash
 ---
 
-## Usage
-`/project:test <COMPONENT_OR_FEATURE>`
-
 ## Context
 - Target component/feature: $ARGUMENTS
 - Existing test files and frameworks will be referenced using @ file syntax.

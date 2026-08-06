@@ -5,13 +5,9 @@ argument-hint: "<CODE_SCOPE_DESCRIPTION>"
 allowed-tools: Task Read Glob Grep Write Edit
 ---
 
-## Usage
-
-`/project:docs <CODE_SCOPE_DESCRIPTION>`
-
 ## Context
 
-* Target code scope: \$ARGUMENTS
+* Target code scope: $ARGUMENTS
 * Related files will be referenced using `@file` syntax.
 * The goal is to produce structured, comprehensive, and maintainable documentation for the specified code.
 

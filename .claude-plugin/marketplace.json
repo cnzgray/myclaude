@@ -16,7 +16,7 @@
         },
         {
             "name": "cexll",
-            "version": "6.3.2",
+            "version": "6.3.4",
             "description": "Cexll All in One, 需要依赖codeagent-wrapper.",
             "source": "./plugins",
             "strict": false,
@@ -76,7 +76,7 @@
         },
         {
             "name": "cexll-essentials",
-            "version": "6.3.2",
+            "version": "6.3.4",
             "description": "核心开发命令和工具",
             "source": "./plugins/development-essentials",
             "strict": false,

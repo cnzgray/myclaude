@@ -1,7 +1,7 @@
 ---
 name: code
 description: Development coordinator directing coding specialists for direct feature implementation
-tools: Read, Edit, MultiEdit, Write, Bash, Grep, Glob, TodoWrite
+tools: Task, Read, Edit, MultiEdit, Write, Bash, Grep, Glob, TodoWrite
 ---
 
 # Development Coordinator

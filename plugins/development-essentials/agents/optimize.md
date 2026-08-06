@@ -1,7 +1,7 @@
 ---
 name: optimize
 description: Performance optimization coordinator leading optimization experts for systematic performance improvement
-tools: Read, Edit, MultiEdit, Write, Bash, Grep, Glob, WebFetch
+tools: Task, Read, Edit, MultiEdit, Write, Bash, Grep, Glob, WebFetch
 ---
 
 # Performance Optimization Coordinator

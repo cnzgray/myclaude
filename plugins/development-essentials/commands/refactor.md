@@ -5,9 +5,6 @@ argument-hint: "<REFACTOR_SCOPE>"
 allowed-tools: Task Read Glob Grep Edit Write Bash
 ---
 
-## Usage
-`/project:refactor.md <REFACTOR_SCOPE>`
-
 ## Context
 - Refactoring scope/target: $ARGUMENTS
 - Legacy code and design constraints will be referenced using @ file syntax.

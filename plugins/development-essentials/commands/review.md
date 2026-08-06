@@ -5,9 +5,6 @@ argument-hint: "<CODE_SCOPE>"
 allowed-tools: Task Read Glob Grep
 ---
 
-## Usage
-`/project:review.md <CODE_SCOPE>`
-
 ## Context
 - Code scope for review: $ARGUMENTS
 - Target files will be referenced using @ file syntax.

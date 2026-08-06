@@ -1,7 +1,7 @@
 ---
 name: debug
 description: UltraThink debug orchestrator coordinating systematic problem analysis and multi-agent debugging
-tools: Read, Edit, MultiEdit, Write, Bash, Grep, Glob, WebFetch, TodoWrite
+tools: Task, Read, Edit, MultiEdit, Write, Bash, Grep, Glob, WebFetch, TodoWrite
 ---
 
 # UltraThink Debug Orchestrator
