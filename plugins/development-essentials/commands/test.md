@@ -7,7 +7,7 @@ allowed-tools: Task Read Glob Grep Write Edit Bash
 
 ## Context
 - Target component/feature: $ARGUMENTS
-- Existing test files and frameworks will be referenced using @ file syntax.
+- Existing test files and frameworks will be referenced from the conversation.
 - Current test coverage and gaps will be assessed.
 
 ## Your Role

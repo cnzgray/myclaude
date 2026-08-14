@@ -8,7 +8,7 @@ allowed-tools: Task Read Glob Grep Write Edit
 ## Context
 
 * Target code scope: $ARGUMENTS
-* Related files will be referenced using `@file` syntax.
+* Related files will be referenced from the conversation.
 * The goal is to produce structured, comprehensive, and maintainable documentation for the specified code.
 
 ## Your Role

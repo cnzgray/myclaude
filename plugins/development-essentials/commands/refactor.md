@@ -7,7 +7,7 @@ allowed-tools: Task Read Glob Grep Edit Write Bash
 
 ## Context
 - Refactoring scope/target: $ARGUMENTS
-- Legacy code and design constraints will be referenced using @ file syntax.
+- Legacy code and design constraints will be referenced from the conversation.
 - Existing test coverage and dependencies will be preserved.
 
 ## Your Role

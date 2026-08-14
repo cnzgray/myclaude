@@ -7,7 +7,7 @@ allowed-tools: Task Read Glob Grep
 
 ## Context
 - Code scope for review: $ARGUMENTS
-- Target files will be referenced using @ file syntax.
+- Target files will be referenced from the conversation.
 - Project coding standards and conventions will be considered.
 
 ## Your Role

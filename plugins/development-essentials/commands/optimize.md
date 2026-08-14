@@ -7,12 +7,12 @@ allowed-tools: Task Read Glob Grep
 
 ## Context
 - Performance target/bottleneck: $ARGUMENTS
-- Relevant code and profiling data will be referenced using @ file syntax.
+- Relevant code and profiling data will be referenced from the conversation.
 - Current performance metrics and constraints will be analyzed.
 
 ## Execution
-Invoke the `optimize` agent via the Task tool, passing:
+Delegate to the `optimize` agent, passing:
 - **Performance target**: $ARGUMENTS
-- **Relevant file references** (via @ file syntax) and profiling data.
+- **Relevant file references** and profiling data from the conversation.
 
 The `optimize` agent handles baseline measurement, bottleneck analysis, solution design, and impact validation. Wait for it to complete, then summarize the performance analysis, optimization strategy, implementation plan, and measurement framework for the user.
