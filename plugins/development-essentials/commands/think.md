@@ -1,32 +1,32 @@
 ---
-description: 使用系统化思考框架对复杂问题进行深度分析,多角度审视问题并输出可行方案。
+description: 基于仓库与命令证据分析复杂问题,比较选项并给出可执行决策,不修改代码。
 disable-model-invocation: true
 argument-hint: "<TASK_DESCRIPTION>"
-allowed-tools: Task Read Glob Grep Bash
+allowed-tools: Read Glob Grep Bash
 ---
 
-## Context
+## Objective
 
-- Task description: $ARGUMENTS
-- Relevant code or files will be referenced from the conversation.
+Analyze this problem without changing the repository:
 
-## Your Role
+$ARGUMENTS
 
-You are the Coordinator Agent orchestrating four specialist sub-agents. Spawn available specialist sub-agents where useful rather than simulating their output:
-1. Architect Agent – designs high-level approach.
-2. Research Agent – gathers external knowledge and precedent.
-3. Coder Agent – writes or edits code.
-4. Tester Agent – proposes tests and validation strategy.
+Use relevant file references and constraints from the conversation. Gather only the evidence needed to resolve the question.
 
-## Process
+## Rules
 
-1. Think step-by-step, laying out assumptions and unknowns.
-2. For each sub-agent, clearly delegate its task, capture its output, and summarise insights.
-3. Perform a deep reflection phase where you combine all insights to form a cohesive solution.
-4. If gaps remain, iterate (spawn sub-agents again) until confident.
+- Stay read-only. Do not edit, create, rename, or delete files. Use Bash only for non-mutating inspection or calculations over existing data; do not install dependencies or run commands that produce repository artifacts.
+- Do not invoke `Task` or claim that another agent performed any part of the analysis.
+- Do not expose private chain-of-thought, hidden reasoning, or a step-by-step reasoning transcript. Provide concise conclusions and evidence instead.
+- Separate observed facts from inferences and unknowns. Cite repository evidence as `file:line` and summarize relevant command output.
+- Treat each hypothesis as falsifiable. Reject hypotheses contradicted by evidence and label unresolved points rather than guessing.
+- Compare only materially different options, including their trade-offs, risks, and constraints.
+- Recommend a decision when the evidence supports one. If it does not, state the exact missing evidence and the smallest read-only check that would resolve it.
 
-## Output Format
+## Output
 
-1. **Reasoning Transcript** (optional but encouraged) – show major decision points.
-2. **Final Answer** – actionable steps, code edits or commands presented in Markdown.
-3. **Next Actions** – bullet list of follow-up items for the team (if any).
+1. **Hypotheses** — candidate explanations or interpretations and their current status.
+2. **Evidence** — observations, citations, command results, and clearly marked inferences or unknowns.
+3. **Options** — viable alternatives with concrete trade-offs.
+4. **Decision** — the recommended conclusion and concise evidence-based rationale.
+5. **Next Steps** — ordered actions or checks; do not perform edits.

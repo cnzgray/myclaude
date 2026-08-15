@@ -36,51 +36,51 @@
     "code-explorer": {
       "backend": "claude",
       "model": "claude-sonnet-4-5-20250929",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/do/agents/code-explorer.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/do/agents/code-explorer.md"
     },
     "code-reviewer": {
       "backend": "claude",
       "model": "claude-sonnet-4-5-20250929",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/do/agents/code-reviewer.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/do/agents/code-reviewer.md"
     },
     "code-architect": {
       "backend": "claude",
       "model": "claude-sonnet-4-5-20250929",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/do/agents/code-architect.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/do/agents/code-architect.md"
     },
     "develop": {
       "backend": "codex",
       "model": "gpt-5.2",
       "yolo": true,
       "reasoning": "xhigh",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/develop.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/develop.md"
     },
     "code-scout": {
       "backend": "opencode",
       "model": "opencode/grok-code",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/explore.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/explore.md"
     },
     "oracle": {
       "backend": "claude",
       "model": "claude-opus-4-5-20251101",
       "yolo": true,
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/oracle.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/oracle.md"
     },
     "librarian": {
       "backend": "claude",
       "model": "claude-sonnet-4-5-20250929",
       "yolo": true,
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/librarian.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/librarian.md"
     },
     "frontend-ui-ux-engineer": {
       "backend": "gemini",
       "model": "gemini-3-pro-preview",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/frontend-ui-ux-engineer.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/frontend-ui-ux-engineer.md"
     },
     "document-writer": {
       "backend": "gemini",
       "model": "gemini-3-flash-preview",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/omo/references/document-writer.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/omo/references/document-writer.md"
     }
   }
 }
@@ -90,16 +90,18 @@
 
 ### 全功能插件
 
-- **cexll** `v6.3.7` - All in One，集成所有开发命令、agents 和 skills
+- **cexll** `v6.3.8` - All in One，集成所有开发命令、agents 和 skills
   - 依赖：需从 [cexll/myclaude releases](https://github.com/cexll/myclaude/releases) 安装 `codeagent-wrapper` 到 `~/.claude/bin/`
   - 推荐：配合原生 [Codex](https://github.com/openai/codex) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli) 使用效果更佳
 - **zcf** `v3.5.2` - Git 实用工具（commit、worktree、分支清理、rollback）
 
 ### 独立插件
 
-- **cexll-essentials** `v6.3.7` - 核心开发命令和工具（debug、bugfix、optimize、code、review 等）
+- **cexll-essentials** `v6.3.8` - 核心开发命令和工具（debug、bugfix、optimize、code、review 等）
 - **cexll-dev** `v6.3.1` - 轻量级开发工作流，依赖 `codeagent-wrapper`
 - **dev-subagent** `v0.1.0` - 开发工作流（subagent 版本），不依赖 `codeagent-wrapper`
+
+插件版本按 Git 提交统一处理，具体规则由仓库级规则文件维护；插件 README 不重复维护发布流程。
 
 ### Skills 插件
 
@@ -241,7 +243,7 @@ chmod +x ~/.claude/bin/codeagent-wrapper
     "code-architect": {
       "backend": "gemini",
       "model": "gemini-2.5-pro",
-      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.7/cexll-skills/skills/do/agents/code-architect.md"
+      "prompt_file": "~/.claude/plugins/cache/cnzgray-marketplace/cexll/6.3.8/cexll-skills/skills/do/agents/code-architect.md"
     }
   }
 }
