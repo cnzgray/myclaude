@@ -2,7 +2,7 @@
 description: Create reviewed Conventional Commits from current Git changes, with optional splitting, emoji, signoff, and amend
 argument-hint: "[--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]"
 disable-model-invocation: true
-allowed-tools: Bash(git status *), Bash(git diff *), Bash(git log *), Bash(git add *), Bash(git restore --staged *), Bash(git commit *), Bash(git rev-parse *), Bash(git config *), AskUserQuestion
+allowed-tools: Bash(git status *), Bash(git diff *), Bash(git log *), Bash(git add *), Bash(git restore --staged *), Bash(git apply --cached *), Bash(git commit *), Bash(git rev-parse *), Bash(git config *), AskUserQuestion
 ---
 
 # Git Commit
@@ -15,7 +15,7 @@ Create one or more commits using Git only. The command itself never edits workin
 2. Verify this is a Git worktree. Stop on unresolved merge/rebase conflicts. Warn and require confirmation for detached HEAD.
 3. Inspect `git status --porcelain`, staged diff, unstaged diff, and recent subjects before proposing any mutation.
 4. `--all` means the plan includes `git add -A`, even when some files are already staged. Without it, preserve the current staging boundary.
-5. Split only independent, separately revertable concerns. Do not mix feature, fix, refactor, docs, or tests merely because they are currently staged together. Never attempt partial-hunk staging; ask the user to stage hunks manually when path-level grouping is insufficient.
+5. Split only independent, separately revertable concerns. Do not mix feature, fix, refactor, docs, or tests merely because they are currently staged together. When path-level grouping is insufficient (one file mixes concerns), do partial-hunk staging yourself instead of asking the user: extract the target hunks from `git diff -- <path>` and apply them index-only via `git apply --cached -` (the working tree must never be touched). Before committing, verify the boundary: the staged diff contains exactly the intended hunks, the unstaged diff the remainder.
 6. Before every `git add`, `git restore --staged`, normal commit, multi-commit sequence, or amend:
    - show exact paths, grouping, and complete proposed message(s);
    - explain any staging changes;
